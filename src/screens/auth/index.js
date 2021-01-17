@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     padding: 25,
   },
   formInput: {
-    marginHorizontal: 20,
+    marginHorizontal: 30,
   },
   button: {
     justifyContent: 'center',

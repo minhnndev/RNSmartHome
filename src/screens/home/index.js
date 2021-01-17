@@ -1,79 +1,111 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Animated, {
-  useCode,
-  cond,
-  eq,
-  set,
-  not,
-  Value,
-  interpolate,
-} from 'react-native-reanimated';
-
-import {State} from 'react-native-gesture-handler';
-import {withTransition} from 'react-native-redash/lib/module/v1';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import Header from '../../components/Header';
 import BtnOpacity from '../../components/BtnOpacity';
-import AnimatedBottomPopup from '../../components/AnimatedBottomPopup';
-import ButtonLogout from '../../components/ButtonLogout';
+
+import {SIZES} from '../../utils/theme';
 
 const home = () => {
-  //const translateY = new Value(300);
-  const state = new Value(State.UNDETERMINED);
-  const isOpen = new Value(0);
-  const transition = withTransition(isOpen);
-
-  const translateY = interpolate(transition, {
-    inputRange: [0, 1],
-    outputRange: [300, 0],
-  });
-
-  const zIndex = interpolate(translateY, {
-    inputRange: [0, 300, 300],
-    outputRange: [1, 1, -1],
-  });
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useCode(() => cond(eq(state, State.END), set(isOpen, not(isOpen))), [
-    state,
-    isOpen,
-  ]);
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <>
       <View>
         <Header title="Home" />
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}>
+            <View style={styles.topPopup}>
+              <View style={styles.questionConfirm}>
+                <Text style={styles.titleQuestion}>
+                  Are you sure you want to log out ?
+                </Text>
+              </View>
+              <TouchableOpacity style={styles.logOutConfirm}>
+                <Text style={styles.titleTopPopup}>Log out</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.underPopup}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style={styles.titleUnderPopup}>Cancel</Text>
+            </TouchableOpacity>
+          </Modal>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+            }}>
+            <SimpleLineIcons name="logout" size={25} color="#000" />
+          </TouchableOpacity>
+        </View>
         <View>
           <BtnOpacity title="New Project" target="Project" icon="plus" />
           <BtnOpacity title="My Apps" target="Project" icon="calculator" />
           <BtnOpacity title="QR Code" target="Project" icon="qrcode" />
         </View>
-
-        <ButtonLogout
-          gestureHandler={{
-            onHandlerStateChange: Animated.event([
-              {
-                nativeEvent: {state},
-              },
-            ]),
-          }}
-        />
       </View>
-      <AnimatedBottomPopup
-        gestureHandler={{
-          onHandlerStateChange: Animated.event([
-            {
-              nativeEvent: {state},
-            },
-          ]),
-        }}
-        zIndex={zIndex}
-        translateY={translateY}
-      />
     </>
   );
 };
 
 export default home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  titleQuestion: {
+    color: '#808080',
+    fontSize: 13,
+  },
+  topPopup: {
+    width: SIZES.width - 20,
+    height: 100,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    alignItems: 'center',
+  },
+  titleTopPopup: {
+    color: '#FA3C31',
+    fontSize: 18,
+  },
+  underPopup: {
+    width: SIZES.width - 20,
+    height: 55,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  titleUnderPopup: {
+    color: '#137EFF',
+    fontSize: 18,
+  },
+  questionConfirm: {
+    width: SIZES.width - 20,
+    height: 45,
+    borderBottomWidth: 0.8,
+    borderBottomColor: '#808080',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logOutConfirm: {
+    width: SIZES.width - 20,
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  //--------------------------------------//
+});
