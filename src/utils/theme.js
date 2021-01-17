@@ -4,9 +4,10 @@ export const BANNER_H = 350;
 export const TOPNAVI_H = 50;
 
 export const COLORS = {
-  // base colors
-  primary: '#FC6D3F', // orange
-  secondary: '#CDCDD2', // gray
+  // base colors / color 2021
+  primary: '#F5DF4D', // PANTONE  13-0647 TCX Illuminating
+  secondary: '#939597', // ANTONE  17-5104 TCX Ultimate Gray
+
   background: '#212226', // gray
 
   // colors

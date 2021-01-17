@@ -12,17 +12,7 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import AppContainer from './navigation/index';
 
 const App = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <AppContainer />
-    </SafeAreaView>
-  );
+  return <AppContainer />;
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

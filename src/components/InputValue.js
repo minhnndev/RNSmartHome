@@ -7,16 +7,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Feather';
+import {COLORS} from '../utils/theme';
 
 export default function InputValue({
   title,
   icon,
   isPassword,
-  isContent,
   onChangeText,
   keyboardType,
-  isMultiLine,
-  numberOfLines,
   value,
 }) {
   const [show, setShow] = useState(false);
@@ -25,40 +23,29 @@ export default function InputValue({
   return (
     <View style={styles.container}>
       <Text style={styles.title}> {title} </Text>
-      {!isContent ? (
-        <View style={styles.inputContainer}>
-          <Icons name={icon} size={22} color="#d3d4d5" />
-          <TextInput
-            style={styles.input}
-            keyboardType={keyboardType}
-            onChangeText={onChangeText}
-            secureTextEntry={isPassword ? visible : !visible}
-            value={value}
-          />
-          {isPassword && (
-            <TouchableOpacity
-              onPress={() => {
-                setShow(!show);
-                setVisible(!visible);
-              }}>
-              <Icons
-                name={show === false ? 'eye' : 'eye-off'}
-                size={20}
-                color="#be1e2d"
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-      ) : (
-        <View style={styles.inputContent}>
-          <TextInput
-            multiline={isMultiLine}
-            numberOfLines={numberOfLines}
-            style={styles.input}
-            onChangeText={onChangeText}
-          />
-        </View>
-      )}
+      <View style={styles.inputContainer}>
+        <Icons name={icon} size={22} color="#d3d4d5" />
+        <TextInput
+          style={styles.input}
+          keyboardType={keyboardType}
+          onChangeText={onChangeText}
+          secureTextEntry={isPassword ? visible : !visible}
+          value={value}
+        />
+        {isPassword && (
+          <TouchableOpacity
+            onPress={() => {
+              setShow(!show);
+              setVisible(!visible);
+            }}>
+            <Icons
+              name={show === false ? 'eye' : 'eye-off'}
+              size={20}
+              color={COLORS.primary}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }

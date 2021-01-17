@@ -1,19 +1,36 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import Animated from 'react-native-reanimated';
-import {TapGestureHandler} from 'react-native-gesture-handler';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
-const Button = ({gestureHandler}) => {
+import {useNavigation} from '@react-navigation/native';
+import {COLORS, SIZES} from '../utils/theme';
+
+const Button = ({title, target}) => {
+  const navigation = useNavigation();
   return (
-    <TapGestureHandler {...gestureHandler}>
-      <Animated.View>
-        <SimpleLineIcons name="logout" size={30} color="#FFF" />
-      </Animated.View>
-    </TapGestureHandler>
+    <TouchableOpacity
+      onPress={() => navigation.navigate(target)}
+      style={styles.btn}>
+      <View>
+        <Text style={styles.btnText}>{title}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 export default Button;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  btn: {
+    marginTop: 30,
+    width: 200,
+    height: 50,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  btnText: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+});

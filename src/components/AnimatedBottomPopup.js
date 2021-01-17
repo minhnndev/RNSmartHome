@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, Dimensions, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Dimensions,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {TapGestureHandler} from 'react-native-gesture-handler';
 
@@ -9,15 +15,10 @@ const AnimatedBottomPopup = ({translateY, gestureHandler, zIndex}) => {
   return (
     <>
       <TapGestureHandler {...gestureHandler}>
-        <Animated.View
-          style={{
-            ...StyleSheet.absoluteFill,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: zIndex,
-          }}
-        />
+        <Animated.View style={[{zIndex: zIndex}]} />
       </TapGestureHandler>
       <Animated.View
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           ...styles.bottomSheet,
           transform: [{translateY: translateY}],
@@ -29,30 +30,30 @@ const AnimatedBottomPopup = ({translateY, gestureHandler, zIndex}) => {
               Are you sure you want to log out ?
             </Text>
           </View>
-          <View style={styles.logOutConfirm}>
+          <TouchableOpacity style={styles.logOutConfirm}>
             <Text style={styles.titleTopPopup}>Log out</Text>
-          </View>
+          </TouchableOpacity>
         </View>
-        <View style={styles.underPopup}>
+        <TouchableOpacity style={styles.underPopup}>
           <Text style={styles.titleUnderPopup}>Cancel</Text>
-        </View>
+        </TouchableOpacity>
       </Animated.View>
     </>
   );
 };
 export default AnimatedBottomPopup;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   bottomSheet: {
-    position: 'absolute',
-    bottom: 0,
+    bottom: -1,
     width: width - 20,
-    height: 165,
+    height: 300,
     borderRadius: 10,
     marginHorizontal: 10,
     alignItems: 'center',
+  },
+  hihi: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   titleQuestion: {
     color: '#808080',

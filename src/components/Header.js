@@ -21,7 +21,7 @@ const Header = ({title, backBtn}) => {
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#4dffa3', '#90ee90']}>
+        colors={[COLORS.primary, COLORS.primary]}>
         <View style={[styles.headerView, backBtn && styles.alignItems]}>
           {backBtn && (
             <TouchableOpacity
