@@ -4,7 +4,8 @@ export const BANNER_H = 350;
 export const TOPNAVI_H = 50;
 
 export const COLORS = {
-  // base colors / color 2021
+  // base colors
+  // color 2021
   primary: '#F5DF4D', // PANTONE  13-0647 TCX Illuminating
   secondary: '#939597', // ANTONE  17-5104 TCX Ultimate Gray
 
@@ -18,8 +19,9 @@ export const COLORS = {
   lightGray2: '#F6F6F7',
   lightGray3: '#EFEFF1',
   lightGray4: '#F8F8F9',
-  transparent: 'transparent',
   darkgray: '#898C95',
+
+  transparent: 'transparent',
 };
 
 export const SIZES = {
@@ -31,15 +33,16 @@ export const SIZES = {
   padding2: 12,
 
   // font sizes
-  largeTitle: 50,
-  h1: 30,
-  h2: 22,
+  largeTitle: 36,
+  h1: 28,
+  h2: 24,
   h3: 20,
-  h4: 18,
-  body1: 30,
-  body2: 20,
-  body3: 16,
-  body4: 14,
+  h4: 16,
+  p: 12,
+  body1: 28,
+  body2: 24,
+  body3: 20,
+  body4: 16,
   body5: 12,
 
   // app dimensions
@@ -48,20 +51,9 @@ export const SIZES = {
 };
 
 export const FONTS = {
-  largeTitle: {
-    fontFamily: 'Roboto-regular',
-    fontSize: SIZES.largeTitle,
-    lineHeight: 55,
-  },
-  h1: {fontFamily: 'Roboto-Black', fontSize: SIZES.h1, lineHeight: 36},
-  h2: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h2, lineHeight: 30},
-  h3: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h3, lineHeight: 22},
-  h4: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h4, lineHeight: 22},
-  body1: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body1, lineHeight: 36},
-  body2: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body2, lineHeight: 30},
-  body3: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body3, lineHeight: 22},
-  body4: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body4, lineHeight: 22},
-  body5: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body5, lineHeight: 22},
+  robotoBlack: {fontFamily: 'Roboto-Black'},
+  robotoBold: {fontFamily: 'Roboto-Bold'},
+  robotoRegular: {fontFamily: 'Roboto-Regular'},
 };
 
 const appTheme = {COLORS, SIZES, FONTS};

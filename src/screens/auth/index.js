@@ -10,9 +10,10 @@ import {
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import InputValue from '../../components/InputValue';
 import TextGradient from '../../components/TextGradient';
-import Button from '../../components/Button';
+
+import Login from './login';
+import Register from './register';
 
 const ButtonIcon = ({nameIcon, color}) => {
   return (
@@ -23,6 +24,7 @@ const ButtonIcon = ({nameIcon, color}) => {
 };
 
 const auth = () => {
+  const [tab, setTab] = React.useState(0);
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -32,18 +34,19 @@ const auth = () => {
           style={styles.tinyLogo}
         />
       </View>
-      <View style={styles.formInput}>
-        <InputValue title="Username" icon="user" />
-        <InputValue title="Password" icon="lock" isPassword />
-      </View>
+      {tab === 0 && <Login />}
+      {tab === 1 && <Register />}
       <View style={styles.button}>
-        <Button title="Login" target="Home" />
-        <TouchableOpacity style={styles.btnRegis}>
-          <Text style={styles.btnText}>Register</Text>
+        <TouchableOpacity
+          onPress={() => (tab === 1 ? setTab(0) : setTab(1))}
+          style={styles.btnRegis}>
+          <Text style={styles.btnText}>{tab === 1 ? 'Login' : 'Register'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
-        <Text style={styles.footerText}>OR LOGIN WITH</Text>
+        <Text style={styles.footerText}>
+          OR {tab === 0 ? 'LOGIN' : 'REGISTER'} WITH
+        </Text>
         <View style={styles.listButtonAccount}>
           <ButtonIcon nameIcon="twitter" color="#1DA1F2" />
           <ButtonIcon nameIcon="google" color="#DB4437" />

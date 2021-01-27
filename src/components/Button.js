@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
-import {COLORS, SIZES} from '../utils/theme';
+import {COLORS} from '../utils/theme';
 
 const Button = ({title, target}) => {
   const navigation = useNavigation();
