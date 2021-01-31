@@ -1,5 +1,7 @@
 apply plugin: "com.android.application"
 
+//apply plugin: 'com.google.gms.google-services'
+
 import com.android.build.OutputFile
 
 /**
@@ -118,7 +120,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
+def enableHermes = project.ext.react.get("enableHermes", true);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -186,6 +188,14 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    // Import the Firebase BoM
+    //implementation platform('com.google.firebase:firebase-bom:26.4.0')
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+     // When using the BoM, don't specify versions in Firebase dependencies
+    // implementation 'com.google.firebase:firebase-analytics'
+
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

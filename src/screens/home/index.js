@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
+  Dimensions,
+  Animated,
   View,
   Text,
   Image,
@@ -14,9 +16,83 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 import {COLORS, SIZES} from '../../utils/theme';
 
+const {width, height} = Dimensions.get('screen');
+
+const images = {
+  Livingroom: require('../../assets/img/livingRoom'),
+  Bedroom: require('../../assets/img/bedRoom'),
+  Kitchen: require('../../assets/img/kitchen'),
+  Bathroom: require('../../assets/img/bathRoom'),
+};
+const data = Object.keys(images).map((i) => ({
+  key: i,
+  title: i,
+  image: images[i],
+  ref: React.createRef(),
+}));
+
+const Tab = React.forwardRef(({item, onItemPress}, ref) => {
+  return (
+    <TouchableOpacity onPress={onItemPress}>
+      <View ref={ref}>
+        <Text style={styles.txtTab}>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+});
+
+const Tabs = ({data, scrollX, onItemPress}) => {
+  const [measures, setMeasures] = React.useState([]);
+  const containerRef = React.useRef();
+  React.useEffect(() => {
+    let m = [];
+    data.forEach((item) => {
+      item.ref.current.measureLayout(
+        containerRef.current,
+        (x, y, width, height) => {
+          m.push({
+            x,
+            y,
+            width,
+            height,
+          });
+          if (m.length === data.length) {
+            setMeasures(m);
+          }
+        },
+      );
+    });
+  });
+
+  return (
+    <View style={styles.posTab}>
+      <View ref={containerRef} style={styles.spaceTab}>
+        {data.map((item, index) => {
+          return (
+            <Tab
+              key={item.key}
+              item={item}
+              ref={item.ref}
+              onItemPress={() => onItemPress(index)}
+            />
+          );
+        })}
+      </View>
+    </View>
+  );
+};
+
 const home = ({navigation}) => {
-  const [status, setStatus] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
+  const scrollX = React.useRef(new Animated.Value(0)).current;
+  const ref = React.useRef();
+  const onItemPress = React.useCallback((itemIndex) => {
+    ref?.current?.scrollToOffset({
+      offset: itemIndex * width,
+    });
+  });
+
+  const [status, setStatus] = React.useState(false);
+  const [isEnabled, setIsEnabled] = React.useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   return (
     <SafeAreaView styles={styles.container}>
