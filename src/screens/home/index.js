@@ -1,5 +1,6 @@
 import React, {useState, useRef} from 'react';
 import {
+  StatusBar,
   SafeAreaView,
   StyleSheet,
   Dimensions,
@@ -104,6 +105,7 @@ const Home = ({navigation}) => {
 
   return (
     <SafeAreaView styles={styles.container}>
+      <StatusBar hidden />
       <View style={styles.header}>
         <Text style={styles.name}>Smart Home</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -115,6 +117,7 @@ const Home = ({navigation}) => {
       </View>
       <Animated.FlatList
         ref={ref}
+        data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
@@ -124,16 +127,12 @@ const Home = ({navigation}) => {
           {useNativeDriver: false},
         )}
         keyExtractor={(item) => item.key}
-        data={states.listImage}
-        renderItem={(e) => {
+        renderItem={({item}) => {
           return (
             <View>
               <View style={styles.top}>
-                <Image
-                  source={require('../../assets/img/livingRoom.jpg')}
-                  style={styles.imgRoom}
-                />
-                <Text style={styles.txtRoom}>{}</Text>
+                <Image source={item.image} style={styles.imgRoom} />
+                <Text style={styles.txtRoom}>{item.title}</Text>
               </View>
 
               <View style={styles.bodyContainer}>
@@ -152,28 +151,33 @@ const Home = ({navigation}) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View style={styles.bodyContainer}>
+                <View>
                   <FlatList
                     numColumns={2}
-                    data={states.listImage}
-                    renderItem={(e) => {
+                    data={data}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({item}) => {
                       return (
-                        <View style={styles.btnSmall}>
-                          <Entypo
-                            name={states.isEnabled ? 'light-up' : 'light-down'}
-                            size={30}
-                            color={COLORS.primary}
-                          />
-                          <View style={styles.top}>
-                            <Switch
-                              trackColor={{false: '#767577', true: '#fff021'}}
-                              thumbColor={
-                                states.isEnabled ? '#f5dd4b' : '#f4f3f4'
+                        <View style={styles.viewDevice}>
+                          <View style={styles.btnSmall}>
+                            <Entypo
+                              name={
+                                states.isEnabled ? 'light-up' : 'light-down'
                               }
-                              onValueChange={toggleSwitch}
-                              value={states.isEnabled}
+                              size={30}
+                              color={COLORS.primary}
                             />
-                            <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                            <View style={styles.top}>
+                              <Switch
+                                trackColor={{false: '#767577', true: '#fff021'}}
+                                thumbColor={
+                                  states.isEnabled ? '#f5dd4b' : '#f4f3f4'
+                                }
+                                onValueChange={toggleSwitch}
+                                value={states.isEnabled}
+                              />
+                              <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                            </View>
                           </View>
                         </View>
                       );
@@ -256,6 +260,7 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     margin: 20,
+    justifyContent: 'space-evenly',
   },
 
   imageMember: {
@@ -269,6 +274,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnSmall: {
+    marginTop: 10,
+    marginHorizontal: 10,
     backgroundColor: COLORS.white,
     width: 150,
     height: 100,
@@ -280,21 +287,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     elevation: 8,
   },
-  btnRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 40,
+  viewDevice: {
+    paddingBottom: 10,
   },
   //----------------------------------------------------------------
   txtTab: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 60 / data.length,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
   posTab: {
     position: 'absolute',
-    top: 250,
+    top: 290,
     width: width,
   },
   spaceTab: {
