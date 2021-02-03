@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Image,
   Switch,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -19,11 +20,12 @@ import {COLORS, SIZES} from '../../utils/theme';
 const {width, height} = Dimensions.get('screen');
 
 const images = {
-  Livingroom: require('../../assets/img/livingRoom'),
-  Bedroom: require('../../assets/img/bedRoom'),
-  Kitchen: require('../../assets/img/kitchen'),
-  Bathroom: require('../../assets/img/bathRoom'),
+  Livingroom: require('../../assets/img/livingRoom.jpg'),
+  Bedroom: require('../../assets/img/bedRoom.jpg'),
+  Kitchen: require('../../assets/img/kitchen.jpg'),
+  Bathroom: require('../../assets/img/bathRoom.jpg'),
 };
+
 const data = Object.keys(images).map((i) => ({
   key: i,
   title: i,
@@ -43,7 +45,7 @@ const Tab = React.forwardRef(({item, onItemPress}, ref) => {
 
 const Tabs = ({data, scrollX, onItemPress}) => {
   const [measures, setMeasures] = React.useState([]);
-  const containerRef = React.useRef();
+  const containerRef = useRef();
   React.useEffect(() => {
     let m = [];
     data.forEach((item) => {
@@ -82,18 +84,24 @@ const Tabs = ({data, scrollX, onItemPress}) => {
   );
 };
 
-const home = ({navigation}) => {
+const Home = ({navigation}) => {
+  const [states, setStates] = React.useState({
+    listImage: images,
+    enabled: false,
+  });
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const ref = React.useRef();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onItemPress = React.useCallback((itemIndex) => {
     ref?.current?.scrollToOffset({
       offset: itemIndex * width,
     });
   });
 
-  const [status, setStatus] = React.useState(false);
-  const [isEnabled, setIsEnabled] = React.useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
   return (
     <SafeAreaView styles={styles.container}>
       <View style={styles.header}>
@@ -105,100 +113,84 @@ const home = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.top}>
-        <Image
-          source={require('../../assets/img/livingRoom.jpg')}
-          style={styles.imgRoom}
-        />
-        <Text style={styles.txtRoom}>Home</Text>
-      </View>
+      <Animated.FlatList
+        ref={ref}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        bounces={false}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {x: scrollX}}}],
+          {useNativeDriver: false},
+        )}
+        keyExtractor={(item) => item.key}
+        data={states.listImage}
+        renderItem={(e) => {
+          return (
+            <View>
+              <View style={styles.top}>
+                <Image
+                  source={require('../../assets/img/livingRoom.jpg')}
+                  style={styles.imgRoom}
+                />
+                <Text style={styles.txtRoom}>{}</Text>
+              </View>
 
-      <View style={styles.bodyContainer}>
-        <View style={styles.createTabs}>
-          <TouchableOpacity onPress={() => navigation.navigate('Project')}>
-            <View style={styles.btnTop}>
-              <AntDesign name="plus" size={40} color={COLORS.white} />
-              <Text style={styles.subtext}>Create</Text>
+              <View style={styles.bodyContainer}>
+                <View style={styles.createTabs}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Project')}>
+                    <View style={styles.btnTop}>
+                      <AntDesign name="plus" size={40} color={COLORS.white} />
+                      <Text style={styles.subtext}>Create</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <View style={styles.btnTop}>
+                      <AntDesign name="qrcode" size={40} color={COLORS.white} />
+                      <Text style={styles.subtext}>QR Code</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.bodyContainer}>
+                  <FlatList
+                    numColumns={2}
+                    data={states.listImage}
+                    renderItem={(e) => {
+                      return (
+                        <View style={styles.btnSmall}>
+                          <Entypo
+                            name={states.isEnabled ? 'light-up' : 'light-down'}
+                            size={30}
+                            color={COLORS.primary}
+                          />
+                          <View style={styles.top}>
+                            <Switch
+                              trackColor={{false: '#767577', true: '#fff021'}}
+                              thumbColor={
+                                states.isEnabled ? '#f5dd4b' : '#f4f3f4'
+                              }
+                              onValueChange={toggleSwitch}
+                              value={states.isEnabled}
+                            />
+                            <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                          </View>
+                        </View>
+                      );
+                    }}
+                  />
+                </View>
+              </View>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.btnTop}>
-              <AntDesign name="qrcode" size={40} color={COLORS.white} />
-              <Text style={styles.subtext}>QR Code</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.btnRow}>
-          <View style={styles.btnSmall}>
-            <SimpleLineIcons name="home" size={30} color={COLORS.primary} />
-            <View style={styles.top}>
-              <Switch
-                trackColor={{false: '#767577', true: '#fff021'}}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-              <Text>{isEnabled ? 'ON' : 'OFF'}</Text>
-            </View>
-          </View>
-          <View style={styles.btnSmall}>
-            <Entypo
-              name={isEnabled ? 'light-up' : 'light-down'}
-              size={30}
-              color={COLORS.primary}
-            />
-            <View style={styles.top}>
-              <Switch
-                trackColor={{false: '#767577', true: '#fff021'}}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-              <Text>{isEnabled ? 'ON' : 'OFF'}</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.btnRow}>
-          <View style={styles.btnSmall}>
-            <SimpleLineIcons
-              name={isEnabled ? 'control-play' : 'control-pause'}
-              size={30}
-              color={COLORS.primary}
-            />
-            <View style={styles.top}>
-              <Switch
-                trackColor={{false: '#767577', true: '#fff021'}}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-              <Text>{isEnabled ? 'ON' : 'OFF'}</Text>
-            </View>
-          </View>
-          <View style={styles.btnSmall}>
-            <SimpleLineIcons
-              name={isEnabled ? 'volume-2' : 'volume-off'}
-              size={30}
-              color={COLORS.primary}
-            />
-            <View style={styles.top}>
-              <Switch
-                trackColor={{false: '#767577', true: '#fff021'}}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-              />
-              <Text>{isEnabled ? 'ON' : 'OFF'}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+          );
+        }}
+      />
+      <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
     </SafeAreaView>
   );
 };
 
-export default home;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
@@ -263,7 +255,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   bodyContainer: {
-    marginHorizontal: 10,
+    margin: 20,
   },
 
   imageMember: {
@@ -292,5 +284,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginTop: 40,
+  },
+  //----------------------------------------------------------------
+  txtTab: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+  posTab: {
+    position: 'absolute',
+    top: 250,
+    width: width,
+  },
+  spaceTab: {
+    justifyContent: 'space-evenly',
+    flex: 1,
+    flexDirection: 'row',
   },
 });

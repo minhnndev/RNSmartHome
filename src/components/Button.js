@@ -4,14 +4,12 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {COLORS} from '../utils/theme';
 
-const Button = ({title, target}) => {
+const Button = (props) => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate(target)}
-      style={styles.btn}>
+    <TouchableOpacity onPress={props.onPress} style={styles.btn}>
       <View>
-        <Text style={styles.btnText}>{title}</Text>
+        <Text style={styles.btnText}>{props.title}</Text>
       </View>
     </TouchableOpacity>
   );

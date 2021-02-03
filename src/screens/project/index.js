@@ -6,7 +6,7 @@ import Header from '../../components/Header';
 import Button from '../../components/Button';
 import InputValue from '../../components/InputValue';
 
-const project = () => {
+const Project = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Project" backBtn />
@@ -16,13 +16,13 @@ const project = () => {
           <InputValue icon="home" title="Choose Device" />
           <InputValue icon="home" title="Connected Type" />
         </View>
-        <Button title="Create Project" target="" />
+        <Button title="Create Project" />
       </View>
     </SafeAreaView>
   );
 };
 
-export default project;
+export default Project;
 
 const styles = StyleSheet.create({
   container: {

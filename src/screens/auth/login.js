@@ -3,8 +3,11 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 import InputValue from '../../components/InputValue';
 import Button from '../../components/Button';
+import {useNavigation} from '@react-navigation/native';
 
-const login = () => {
+const Login = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       <View style={styles.formInput}>
@@ -12,13 +15,13 @@ const login = () => {
         <InputValue title="Password" icon="lock" isPassword />
       </View>
       <View style={styles.button}>
-        <Button title="Login" target="Home" />
+        <Button title="Login" onPress={() => navigation.navigate('Home')} />
       </View>
     </>
   );
 };
 
-export default login;
+export default Login;
 
 const styles = StyleSheet.create({
   formInput: {
