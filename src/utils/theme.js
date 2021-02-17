@@ -5,9 +5,12 @@ export const TOPNAVI_H = 50;
 
 export const COLORS = {
   // base colors
-  // color 2021
-  primary: '#F5DF4D', // PANTONE  13-0647 TCX Illuminating
-  secondary: '#939597', // ANTONE  17-5104 TCX Ultimate Gray
+  primary: '#4bcafb',
+  secondary: '#4507A0',
+
+  // gradient
+  gradientStart: '#4bcafb',
+  gradientEnd: '#4507A0',
 
   background: '#212226', // gray
 
@@ -15,10 +18,8 @@ export const COLORS = {
   black: '#1E1F20',
   white: '#FFFFFF',
 
-  lightGray: '#F5F5F6',
+  lightGray: '#939597', // ANTONE  17-5104 TCX Ultimate Gray
   lightGray2: '#F6F6F7',
-  lightGray3: '#EFEFF1',
-  lightGray4: '#F8F8F9',
   darkgray: '#898C95',
 
   transparent: 'transparent',
@@ -28,7 +29,7 @@ export const SIZES = {
   // global sizes
   base: 8,
   font: 14,
-  radius: 30,
+  radius: 10,
   padding: 10,
   padding2: 12,
 

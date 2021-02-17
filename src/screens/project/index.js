@@ -9,10 +9,10 @@ import InputValue from '../../components/InputValue';
 const Project = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Project" backBtn />
+      <Header title="Add Room" backBtn />
       <View style={styles.main}>
         <View style={styles.formCreate}>
-          <InputValue icon="home" title="Project Name" />
+          <InputValue icon="home" title="Room Name" />
           <InputValue icon="home" title="Choose Device" />
           <InputValue icon="home" title="Connected Type" />
         </View>

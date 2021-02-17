@@ -12,6 +12,8 @@ target 'SmartHome' do
 
   pod 'RealmJS', :path => '../node_modules/realm'
 
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
   target 'SmartHomeTests' do
     inherit! :complete
     # Pods for testing

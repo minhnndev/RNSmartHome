@@ -3,4 +3,7 @@ export const Styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  textAlign: {
+    textAlign: 'center',
+  },
 });

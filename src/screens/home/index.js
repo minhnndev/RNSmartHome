@@ -11,27 +11,27 @@ import {
   Switch,
   TouchableOpacity,
   FlatList,
+  Touchable,
 } from 'react-native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import {TextGradient} from '../../components/index';
 import {COLORS, SIZES} from '../../utils/theme';
+
+import {room, device} from './listData';
 
 const {width, height} = Dimensions.get('screen');
 
-const images = {
-  Livingroom: require('../../assets/img/livingRoom.jpg'),
-  Bedroom: require('../../assets/img/bedRoom.jpg'),
-  Kitchen: require('../../assets/img/kitchen.jpg'),
-  Bathroom: require('../../assets/img/bathRoom.jpg'),
-};
-
-const data = Object.keys(images).map((i) => ({
+const data = Object.keys(room).map((i) => ({
   key: i,
-  title: i,
-  image: images[i],
+  title: room[i],
   ref: React.createRef(),
+}));
+
+const deviceData = Object.keys(device).map((i) => ({
+  index: i,
+  name: device[i],
 }));
 
 const Tab = React.forwardRef(({item, onItemPress}, ref) => {
@@ -43,6 +43,35 @@ const Tab = React.forwardRef(({item, onItemPress}, ref) => {
     </TouchableOpacity>
   );
 });
+
+const Indicator = ({measures, scrollX}) => {
+  const inputRange = data.map((_, i) => i * width);
+  const indicatorWidth = scrollX.interpolate({
+    inputRange,
+    outputRange: measures.map((measures) => measures.width),
+  });
+  const translateX = scrollX.interpolate({
+    inputRange,
+    outputRange: measures.map((measures) => measures.x),
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        height: 4,
+        width: indicatorWidth,
+        left: 0,
+        backgroundColor: COLORS.lightGray,
+        bottom: -10,
+        transform: [
+          {
+            translateX,
+          },
+        ],
+      }}
+    />
+  );
+};
 
 const Tabs = ({data, scrollX, onItemPress}) => {
   const [measures, setMeasures] = React.useState([]);
@@ -81,13 +110,16 @@ const Tabs = ({data, scrollX, onItemPress}) => {
           );
         })}
       </View>
+      {measures.length > 0 && (
+        <Indicator measures={measures} scrollX={scrollX} />
+      )}
     </View>
   );
 };
 
 const Home = ({navigation}) => {
   const [states, setStates] = React.useState({
-    listImage: images,
+    listRoom: room,
     enabled: false,
   });
 
@@ -105,91 +137,116 @@ const Home = ({navigation}) => {
 
   return (
     <SafeAreaView styles={styles.container}>
-      <StatusBar hidden />
-      <View style={styles.header}>
-        <Text style={styles.name}>Smart Home</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Image
-            source={require('../../assets/img/minhdev.jpg')}
-            style={styles.imageMember}
-          />
-        </TouchableOpacity>
+      <View>
+        <View style={styles.header}>
+          <TextGradient style={styles.name}>Smart Home</TextGradient>
+          <TouchableOpacity onPress={() => navigation.navigate('About')}>
+            <AntDesign name="infocirlceo" size={30} color={COLORS.secondary} />
+          </TouchableOpacity>
+        </View>
+        <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
       </View>
-      <Animated.FlatList
-        ref={ref}
-        data={data}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        bounces={false}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: false},
-        )}
-        keyExtractor={(item) => item.key}
-        renderItem={({item}) => {
-          return (
-            <View>
-              <View style={styles.top}>
-                <Image source={item.image} style={styles.imgRoom} />
-                <Text style={styles.txtRoom}>{item.title}</Text>
-              </View>
-
-              <View style={styles.bodyContainer}>
-                <View style={styles.createTabs}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('Project')}>
-                    <View style={styles.btnTop}>
-                      <AntDesign name="plus" size={40} color={COLORS.white} />
-                      <Text style={styles.subtext}>Create</Text>
+      <View style={{marginTop: 30}}>
+        <Animated.FlatList
+          ref={ref}
+          data={data}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          bounces={false}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: scrollX}}}],
+            {useNativeDriver: false},
+          )}
+          keyExtractor={(item) => item.key}
+          renderItem={({item}) => {
+            return (
+              <View>
+                <View style={styles.bodyContainer}>
+                  <View style={styles.vParameter}>
+                    <View style={styles.paraBox}>
+                      <View style={styles.paraIcon}>
+                        <Entypo
+                          name="thermometer"
+                          size={30}
+                          color={COLORS.secondary}
+                        />
+                        <Text style={styles.txtPara}>27°C</Text>
+                      </View>
+                      <Text style={styles.subtext}>Celsius</Text>
                     </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <View style={styles.btnTop}>
-                      <AntDesign name="qrcode" size={40} color={COLORS.white} />
-                      <Text style={styles.subtext}>QR Code</Text>
+                    <View style={styles.paraBox}>
+                      <View style={styles.paraIcon}>
+                        <Entypo
+                          name="cloud"
+                          size={30}
+                          color={COLORS.secondary}
+                        />
+                        <Text style={styles.txtPara}> 48.5 %</Text>
+                      </View>
+                      <Text style={styles.subtext}>Humidity</Text>
                     </View>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <FlatList
-                    numColumns={2}
-                    data={data}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({item}) => {
-                      return (
-                        <View style={styles.viewDevice}>
-                          <View style={styles.btnSmall}>
-                            <Entypo
-                              name={
-                                states.isEnabled ? 'light-up' : 'light-down'
-                              }
-                              size={30}
-                              color={COLORS.primary}
-                            />
-                            <View style={styles.top}>
-                              <Switch
-                                trackColor={{false: '#767577', true: '#fff021'}}
-                                thumbColor={
-                                  states.isEnabled ? '#f5dd4b' : '#f4f3f4'
-                                }
-                                onValueChange={toggleSwitch}
-                                value={states.isEnabled}
-                              />
-                              <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                  </View>
+                  {/*-------------------------*/}
+                  <View style={styles.vControl}>
+                    <View>
+                      <TextGradient style={styles.nameRoom}>
+                        {item.title}
+                      </TextGradient>
+                      <Text style={styles.desc}>
+                        Total have{' '}
+                        <Text style={{color: COLORS.secondary}}>
+                          {data.length}
+                        </Text>{' '}
+                        device in your Room
+                      </Text>
+                    </View>
+                    <View style={styles.viewDevice}>
+                      <FlatList
+                        numColumns={2}
+                        data={deviceData}
+                        keyExtractor={(item) => item.index}
+                        renderItem={({item}) => {
+                          return (
+                            <View style={styles.bottomDevice}>
+                              <View style={styles.btnSmall}>
+                                <Text style={styles.nameDevice}>
+                                  {item.name}
+                                </Text>
+                                <View style={styles.alignCenter}>
+                                  <Switch
+                                    trackColor={{
+                                      false: '#767577',
+                                      true: '#fff021',
+                                    }}
+                                    thumbColor={
+                                      states.isEnabled ? '#f5dd4b' : '#f4f3f4'
+                                    }
+                                    onValueChange={toggleSwitch}
+                                    value={states.isEnabled}
+                                  />
+                                  <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                                </View>
+                              </View>
                             </View>
-                          </View>
-                        </View>
-                      );
-                    }}
-                  />
+                          );
+                        }}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.btnAddDevice}
+                      onPress={() => navigation.navigate('Device')}>
+                      <Entypo name="plus" size={25} color={COLORS.lightGray} />
+                      <Text style={styles.subtext}> Add new device</Text>
+                    </TouchableOpacity>
+                  </View>
+                  {/*-------------------------*/}
                 </View>
               </View>
-            </View>
-          );
-        }}
-      />
-      <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
+            );
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -199,79 +256,105 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
   },
   name: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '700',
     color: COLORS.primary,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 10,
+    margin: 20,
   },
-  top: {
-    alignItems: 'center',
+  bodyContainer: {
+    marginHorizontal: 10,
   },
-  createTabs: {
-    backgroundColor: COLORS.primary,
-    height: (SIZES.height * 15) / 100,
+
+  vParameter: {
+    width: SIZES.width - 40,
+    height: (SIZES.height * 10) / 100,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     borderRadius: 10,
-    marginTop: 20,
     marginHorizontal: 10,
+    backgroundColor: COLORS.white,
+    marginTop: 10,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 
     elevation: 5,
   },
-  imgRoom: {
-    width: (SIZES.width * 100) / 100,
-    height: (SIZES.height * 25) / 100,
-    borderBottomRightRadius: 30,
-    borderBottomLeftRadius: 30,
+  paraBox: {
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  txtRoom: {
-    marginTop: -25,
-    fontSize: 20,
-    fontWeight: '700',
-    color: COLORS.black,
-    paddingVertical: 10,
-    width: 300,
-    backgroundColor: COLORS.white,
-    textAlign: 'center',
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    elevation: 8,
+  paraIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txtPara: {
+    fontSize: 18,
+    color: COLORS.lightGray,
   },
   subtext: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: '400',
+    color: COLORS.lightGray,
   },
-  bodyContainer: {
-    margin: 20,
-    justifyContent: 'space-evenly',
-  },
-
-  imageMember: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 3,
-    borderColor: COLORS.secondary,
-  },
-  btnTop: {
+  alignCenter: {
     alignItems: 'center',
+  },
+  nameRoom: {
+    fontSize: 18,
+    fontWeight: '700',
+    padding: 10,
+  },
+  desc: {
+    marginLeft: 10,
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.lightGray,
+  },
+  vControl: {
+    width: SIZES.width - 40,
+    height: (SIZES.height * 72) / 100,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    backgroundColor: COLORS.white,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 5,
+  },
+  viewDevice: {
+    width: SIZES.width - 40,
+    borderRadius: 10,
+    backgroundColor: COLORS.white,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  btnAddDevice: {
+    marginTop: 20,
+    height: 50,
+    marginHorizontal: 20,
+    borderColor: COLORS.lightGray,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  nameDevice: {
+    textTransform: 'uppercase',
+    fontSize: 16,
+    color: COLORS.secondary,
   },
   btnSmall: {
     marginTop: 10,
@@ -287,20 +370,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     elevation: 8,
   },
-  viewDevice: {
+  bottomDevice: {
     paddingBottom: 10,
   },
   //----------------------------------------------------------------
   txtTab: {
-    color: 'black',
-    fontSize: 60 / data.length,
+    color: COLORS.lightGray,
+    fontSize: data.length <= 3 ? 17 : data.length === 4 ? 15 : 60 / data.length,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
   posTab: {
     position: 'absolute',
-    top: 290,
     width: width,
+    top: 75,
   },
   spaceTab: {
     justifyContent: 'space-evenly',
