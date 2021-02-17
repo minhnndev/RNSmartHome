@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {COLORS, SIZES} from '../../utils/theme';
 import {Header, Button, InputValue} from '../../components';
 
 const Setting = () => {
@@ -16,7 +15,10 @@ const Setting = () => {
       <Header title="Setting" backBtn />
       <View style={styles.main}>
         <InputValue title="Address IP" />
-        <Button title="Save" style={styles.btn} />
+        <View style={styles.potisionBtn}>
+          <View />
+          <Button title="Save" />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -30,5 +32,9 @@ const styles = StyleSheet.create({
   },
   main: {
     marginHorizontal: 20,
+  },
+  potisionBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
