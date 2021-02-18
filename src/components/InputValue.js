@@ -16,6 +16,7 @@ export default function InputValue({
   onChangeText,
   keyboardType,
   value,
+  props,
 }) {
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(true);

@@ -2,12 +2,13 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import AuthScreen from '../screens/auth';
-import HomeScreen from '../screens/home';
 import ProjectScreen from '../screens/project';
-import DeviceScreen from '../screens/device';
+import DeviceScreen from '../screens/device/index';
+import DeviceDetailScreen from '../screens/device/detail';
 import AboutScreen from '../screens/about';
 import SettingScreen from '../screens/extend/settingScreen';
-import AccountScreen from '../screens/extend/accountScreen';
+import AccountScreen from '../screens/extend/account/accountScreen';
+import PasswordScreen from '../screens/extend/account/changePassword';
 import PrivacyScreen from '../screens/extend/privacyScreen';
 import SupportScreen from '../screens/extend/supportScreen';
 import HomeTabs from './tabsNavigator';
@@ -38,6 +39,11 @@ const HomeStackScreen = () => {
         options={{headerShown: false}}
       />
       <homeStack.Screen
+        name="DeviceDetail"
+        component={DeviceDetailScreen}
+        options={{headerShown: false}}
+      />
+      <homeStack.Screen
         name="About"
         component={AboutScreen}
         options={{headerShown: false}}
@@ -45,6 +51,11 @@ const HomeStackScreen = () => {
       <homeStack.Screen
         name="Account"
         component={AccountScreen}
+        options={{headerShown: false}}
+      />
+      <homeStack.Screen
+        name="Password"
+        component={PasswordScreen}
         options={{headerShown: false}}
       />
       <homeStack.Screen

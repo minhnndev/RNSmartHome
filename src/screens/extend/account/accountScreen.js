@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Touchable,
-} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {Header} from '../../components';
+import {Header} from '../../../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {COLORS} from '../../utils/theme';
+import {COLORS} from '../../../utils/theme';
 
 const Icon = ({name}) => {
   return (
@@ -33,7 +26,7 @@ const Profile = () => {
         <View style={styles.top}>
           <View style={styles.containerMember}>
             <Image
-              source={require('../../assets/img/avatar_blank.png')}
+              source={require('../../../assets/img/avatar_blank.png')}
               style={styles.imageMember}
             />
             <Text style={[styles.nameMember]}>Fullname</Text>
@@ -50,9 +43,9 @@ const Profile = () => {
             <Text style={styles.title}>Server:</Text>
             <Text style={styles.content}>SmartHome.Cloud</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Password')}>
             <View style={styles.infoBar}>
-              <Text style={styles.title}>Password:</Text>
+              <Text style={styles.title}>Password</Text>
               <AntDesign name="right" size={22} color={COLORS.lightGray} />
             </View>
           </TouchableOpacity>

@@ -1,23 +1,20 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native';
 
 import {COLORS, SIZES} from '../../utils/theme';
-import {Header, Button, InputValue} from '../../components';
+import {Header} from '../../components';
+
+import PrivacyPolicy from '../../common/database/legal/PrivacyPolicy';
 
 const Privacy = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Privacy" backBtn />
-      <View style={styles.main}>
-        <InputValue title="Address IP" />
-        <Button title="Save" />
-      </View>
+      <ScrollView>
+        <View style={styles.main}>
+          <PrivacyPolicy />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -29,6 +26,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   main: {
-    marginHorizontal: 20,
+    margin: 20,
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 8,
   },
 });

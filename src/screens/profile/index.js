@@ -62,10 +62,6 @@ const Profile = () => {
             <Text style={styles.content}>Support</Text>
           </View>
         </TouchableOpacity>
-        <View style={styles.optionBar}>
-          <Icon name="Safety" />
-          <Text style={styles.content}>Help Center</Text>
-        </View>
         <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
           <View style={styles.optionBar}>
             <Icon name="setting" />

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 160,
   },
   txtLogo: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '700',
     textAlign: 'center',
     padding: 25,

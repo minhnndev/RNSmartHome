@@ -7,14 +7,13 @@ import {
   Animated,
   View,
   Text,
-  Image,
   Switch,
   TouchableOpacity,
   FlatList,
-  Touchable,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {TextGradient} from '../../components/index';
 import {COLORS, SIZES} from '../../utils/theme';
@@ -141,7 +140,7 @@ const Home = ({navigation}) => {
         <View style={styles.header}>
           <TextGradient style={styles.name}>Smart Home</TextGradient>
           <TouchableOpacity onPress={() => navigation.navigate('About')}>
-            <AntDesign name="infocirlceo" size={30} color={COLORS.secondary} />
+            <Ionicons name="notifications" size={30} color={COLORS.secondary} />
           </TouchableOpacity>
         </View>
         <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
@@ -209,25 +208,32 @@ const Home = ({navigation}) => {
                         renderItem={({item}) => {
                           return (
                             <View style={styles.bottomDevice}>
-                              <View style={styles.btnSmall}>
-                                <Text style={styles.nameDevice}>
-                                  {item.name}
-                                </Text>
-                                <View style={styles.alignCenter}>
-                                  <Switch
-                                    trackColor={{
-                                      false: '#767577',
-                                      true: '#fff021',
-                                    }}
-                                    thumbColor={
-                                      states.isEnabled ? '#f5dd4b' : '#f4f3f4'
-                                    }
-                                    onValueChange={toggleSwitch}
-                                    value={states.isEnabled}
-                                  />
-                                  <Text>{states.isEnabled ? 'ON' : 'OFF'}</Text>
+                              <TouchableWithoutFeedback
+                                onPress={() =>
+                                  navigation.navigate('DeviceDetail', {item})
+                                }>
+                                <View style={styles.btnSmall}>
+                                  <Text style={styles.nameDevice}>
+                                    {item.name}
+                                  </Text>
+                                  <View style={styles.alignCenter}>
+                                    <Switch
+                                      trackColor={{
+                                        false: '#767577',
+                                        true: '#fff021',
+                                      }}
+                                      thumbColor={
+                                        states.isEnabled ? '#f5dd4b' : '#f4f3f4'
+                                      }
+                                      onValueChange={toggleSwitch}
+                                      value={states.isEnabled}
+                                    />
+                                    <Text>
+                                      {states.isEnabled ? 'ON' : 'OFF'}
+                                    </Text>
+                                  </View>
                                 </View>
-                              </View>
+                              </TouchableWithoutFeedback>
                             </View>
                           );
                         }}
@@ -325,7 +331,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: COLORS.white,
     marginTop: 10,
-    shadowColor: '#000',
+    shadowColor: COLORS.lightGray,
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 

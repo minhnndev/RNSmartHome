@@ -1,24 +1,34 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View, TextInput} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 
-import {Header, Button, InputValue} from '../../components';
-import {COLORS} from '../../utils/theme';
+import {Header, Button, InputValue} from '../../../components';
+import {COLORS} from '../../../utils/theme';
 
-const Setting = () => {
+const ChangePassword = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Setting" backBtn />
+      <Header title="Change Password" backBtn />
       <View style={styles.main}>
+        <InputValue title="Old Password" icon="lock" />
+        <InputValue title="New Password" icon="lock" />
+        <InputValue title="Confirm Password" icon="lock" />
         <View style={styles.potisionBtn}>
-          <TextInput />
+          <View />
           <Button title="Save" style={styles.btn} />
+          <View />
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Setting;
+export default ChangePassword;
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +43,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 30,
-    width: 50,
+    width: 200,
     height: 50,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
