@@ -1,6 +1,5 @@
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
-  StatusBar,
   SafeAreaView,
   StyleSheet,
   Dimensions,
@@ -14,24 +13,21 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import _ from 'lodash';
 
 import {TextGradient} from '../../components/index';
 import {COLORS, SIZES} from '../../utils/theme';
 
-import {room, device} from './listData';
+import {room} from './listData';
+import API from '../../services/api';
 
-const {width, height} = Dimensions.get('screen');
-
-const data = Object.keys(room).map((i) => ({
+const roomData = Object.keys(room).map((i) => ({
   key: i,
   title: room[i],
   ref: React.createRef(),
 }));
 
-const deviceData = Object.keys(device).map((i) => ({
-  index: i,
-  name: device[i],
-}));
+const {width, height} = Dimensions.get('screen');
 
 const Tab = React.forwardRef(({item, onItemPress}, ref) => {
   return (
@@ -44,7 +40,7 @@ const Tab = React.forwardRef(({item, onItemPress}, ref) => {
 });
 
 const Indicator = ({measures, scrollX}) => {
-  const inputRange = data.map((_, i) => i * width);
+  const inputRange = roomData.map((_, i) => i * width);
   const indicatorWidth = scrollX.interpolate({
     inputRange,
     outputRange: measures.map((measures) => measures.width),
@@ -109,7 +105,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
           );
         })}
       </View>
-      {measures.length > 0 && (
+      {measures.length >= 2 && (
         <Indicator measures={measures} scrollX={scrollX} />
       )}
     </View>
@@ -117,38 +113,93 @@ const Tabs = ({data, scrollX, onItemPress}) => {
 };
 
 const Home = ({navigation}) => {
-  const [states, setStates] = React.useState({
-    listRoom: room,
-    enabled: false,
-  });
+  const [widgets, setWidgets] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  useEffect(() => {
+    console.log('Start fetching data from API ...');
+    API.get('project')
+      .then((res) => {
+        let buttons = res.data.widgets.filter((w) => w.type === 'BUTTON');
+        setWidgets(buttons);
+      })
+      .catch((error) => console.error(error));
+    return setLoading(false);
+  }, []);
 
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-  const ref = React.useRef();
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const ref = useRef();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onItemPress = React.useCallback((itemIndex) => {
+  const onItemPress = useCallback((itemIndex) => {
     ref?.current?.scrollToOffset({
       offset: itemIndex * width,
     });
   });
 
-  return (
+  const getPinShortCode = (widget) => {
+    if (!widget.pin === -1) {
+      return new Error();
+    }
+    switch (widget.pinType) {
+      case 'DIGITAL':
+        return `D${widget.pin}`;
+      case 'VIRTUAL':
+        return `V${widget.pin}`;
+    }
+    return `${widget.pin}`;
+  };
+
+  const setSwitchValue = (value, index) => {
+    let newValue = value ? '1' : '0';
+    let widget = widgets[index];
+    let URI = 'update/' + getPinShortCode(widget) + '?value=' + newValue;
+    API.get(URI).catch((error) => console.error(error));
+    const tempData = _.cloneDeep(widgets);
+    tempData[index].value = newValue;
+    setWidgets(tempData);
+  };
+
+  const listItem = ({item, index}) => (
+    <View style={styles.bottomDevice}>
+      <TouchableWithoutFeedback>
+        <View style={styles.btnSmall}>
+          <Text style={styles.nameDevice}>{item.label}</Text>
+          <View style={styles.alignCenter}>
+            <Switch
+              trackColor={{
+                false: '#767577',
+                true: COLORS.primary,
+              }}
+              thumbColor={'#f4f3f4'}
+              onValueChange={(value) => setSwitchValue(value, index)}
+              value={item.value === '1'}
+            />
+            <Text>{item.value === '1' ? 'Bật' : 'Tắt'}</Text>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
+  );
+
+  return isLoading ? (
+    <View>
+      <Text>Chua co du lieu @@ !</Text>
+    </View>
+  ) : (
     <SafeAreaView styles={styles.container}>
       <View>
         <View style={styles.header}>
-          <TextGradient style={styles.name}>Smart Home</TextGradient>
+          <TextGradient style={styles.name}>TM Platform</TextGradient>
           <TouchableOpacity onPress={() => navigation.navigate('About')}>
             <Ionicons name="notifications" size={30} color={COLORS.secondary} />
           </TouchableOpacity>
         </View>
-        <Tabs scrollX={scrollX} data={data} onItemPress={onItemPress} />
+        <Tabs scrollX={scrollX} data={roomData} onItemPress={onItemPress} />
       </View>
-      <View style={{marginTop: 30}}>
+      <View style={{marginTop: 30, height: '100%'}}>
         <Animated.FlatList
           ref={ref}
-          data={data}
+          data={roomData}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -172,7 +223,7 @@ const Home = ({navigation}) => {
                         />
                         <Text style={styles.txtPara}>27°C</Text>
                       </View>
-                      <Text style={styles.subtext}>Celsius</Text>
+                      <Text style={styles.subtext}>Nhiệt độ</Text>
                     </View>
                     <View style={styles.paraBox}>
                       <View style={styles.paraIcon}>
@@ -181,9 +232,9 @@ const Home = ({navigation}) => {
                           size={30}
                           color={COLORS.secondary}
                         />
-                        <Text style={styles.txtPara}> 48.5 %</Text>
+                        <Text style={styles.txtPara}> 48.5%</Text>
                       </View>
-                      <Text style={styles.subtext}>Humidity</Text>
+                      <Text style={styles.subtext}>Độ ẩm</Text>
                     </View>
                   </View>
                   {/*-------------------------*/}
@@ -193,57 +244,26 @@ const Home = ({navigation}) => {
                         {item.title}
                       </TextGradient>
                       <Text style={styles.desc}>
-                        Total have{' '}
+                        Có tổng cộng{' '}
                         <Text style={{color: COLORS.secondary}}>
-                          {data.length}
+                          {widgets.length}
                         </Text>{' '}
-                        device in your Room
+                        thiết bị trong phòng này
                       </Text>
                     </View>
                     <View style={styles.viewDevice}>
                       <FlatList
                         numColumns={2}
-                        data={deviceData}
-                        keyExtractor={(item) => item.index}
-                        renderItem={({item}) => {
-                          return (
-                            <View style={styles.bottomDevice}>
-                              <TouchableWithoutFeedback
-                                onPress={() =>
-                                  navigation.navigate('DeviceDetail', {item})
-                                }>
-                                <View style={styles.btnSmall}>
-                                  <Text style={styles.nameDevice}>
-                                    {item.name}
-                                  </Text>
-                                  <View style={styles.alignCenter}>
-                                    <Switch
-                                      trackColor={{
-                                        false: '#767577',
-                                        true: '#fff021',
-                                      }}
-                                      thumbColor={
-                                        states.isEnabled ? '#f5dd4b' : '#f4f3f4'
-                                      }
-                                      onValueChange={toggleSwitch}
-                                      value={states.isEnabled}
-                                    />
-                                    <Text>
-                                      {states.isEnabled ? 'ON' : 'OFF'}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </TouchableWithoutFeedback>
-                            </View>
-                          );
-                        }}
+                        data={widgets}
+                        keyExtractor={(item) => item.id}
+                        renderItem={listItem}
                       />
                     </View>
                     <TouchableOpacity
                       style={styles.btnAddDevice}
                       onPress={() => navigation.navigate('Device')}>
                       <Entypo name="plus" size={25} color={COLORS.lightGray} />
-                      <Text style={styles.subtext}> Add new device</Text>
+                      <Text style={styles.subtext}> Thêm thiết bị mới</Text>
                     </TouchableOpacity>
                   </View>
                   {/*-------------------------*/}
@@ -326,7 +346,7 @@ const styles = StyleSheet.create({
   },
   vControl: {
     width: SIZES.width - 40,
-    height: (SIZES.height * 72) / 100,
+    height: (SIZES.height * 67) / 100,
     borderRadius: 10,
     marginHorizontal: 10,
     backgroundColor: COLORS.white,
@@ -368,7 +388,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     width: 150,
     height: 100,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 15,
@@ -382,7 +402,12 @@ const styles = StyleSheet.create({
   //----------------------------------------------------------------
   txtTab: {
     color: COLORS.lightGray,
-    fontSize: data.length <= 3 ? 17 : data.length === 4 ? 15 : 60 / data.length,
+    fontSize:
+      roomData.length <= 3
+        ? 17
+        : roomData.length === 4
+        ? 15
+        : 60 / roomData.length,
     fontWeight: '700',
     textTransform: 'uppercase',
   },

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import MaskedView from '@react-native-community/masked-view';
