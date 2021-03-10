@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {COLORS, SIZES} from '../../utils/theme';
+import {COLORS, SIZES} from '../../utils';
 
 const addDevice = (navigation) => {
   return (

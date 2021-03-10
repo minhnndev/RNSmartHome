@@ -47,11 +47,11 @@ const Indicator = ({measures, scrollX, data}) => {
     <Animated.View
       style={{
         position: 'absolute',
-        height: 4,
+        height: 2,
         width: indicatorWidth,
         left: 0,
         backgroundColor: COLORS.lightGray,
-        bottom: -10,
+        bottom: -7,
         transform: [
           {
             translateX,
@@ -177,15 +177,18 @@ const Home = ({navigation}) => {
           <Text style={styles.nameDevice}>{item.label}</Text>
           <View style={styles.alignCenter}>
             <Switch
+              style={{transform: [{scaleX: 1.5}, {scaleY: 1.5}]}}
               trackColor={{
-                false: '#767577',
+                false: 'rgba(118, 117, 119, 0.4)',
                 true: COLORS.primary,
               }}
               thumbColor={'#f4f3f4'}
               onValueChange={(value) => setSwitchValue(value, roomId, index)}
               value={item.value === '1'}
             />
-            <Text>{item.value === '1' ? 'Bật' : 'Tắt'}</Text>
+            {/*<Text style={{fontFamily: 'Raleway-Regular'}}>*/}
+            {/*  {item.value === '1' ? 'Bật' : 'Tắt'}*/}
+            {/*</Text>*/}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -255,13 +258,21 @@ const Home = ({navigation}) => {
                       <TextGradient style={styles.nameRoom}>
                         {room.name}
                       </TextGradient>
-                      <Text style={styles.desc}>
-                        Có tổng cộng{' '}
-                        <Text style={{color: COLORS.secondary}}>
-                          {room.widgets.length}
-                        </Text>{' '}
-                        thiết bị trong phòng này
-                      </Text>
+                      {room.widgets.length === 0 ? (
+                        <Text style={styles.desc}>Chưa có thiết bị nào.</Text>
+                      ) : (
+                        <Text style={styles.desc}>
+                          Có{' '}
+                          <Text
+                            style={{
+                              color: COLORS.secondary,
+                              fontFamily: 'Raleway-Regular',
+                            }}>
+                            {room.widgets.length}
+                          </Text>{' '}
+                          thiết bị trong phòng.
+                        </Text>
+                      )}
                     </View>
                     <View style={styles.viewDevice}>
                       <FlatList
@@ -298,8 +309,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
+    fontFamily: 'Raleway-Regular',
     fontSize: 28,
-    fontWeight: '700',
+    //fontWeight: '700',
     color: COLORS.primary,
   },
   header: {
@@ -340,22 +352,25 @@ const styles = StyleSheet.create({
     color: COLORS.lightGray,
   },
   subtext: {
+    fontFamily: 'Raleway-Regular',
     fontSize: 16,
-    fontWeight: '400',
+    // fontWeight: '400',
     color: COLORS.lightGray,
   },
   alignCenter: {
     alignItems: 'center',
   },
   nameRoom: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'Raleway-Regular',
+    fontSize: 22,
+    // fontWeight: '700',
     padding: 10,
   },
   desc: {
+    fontFamily: 'Raleway-Regular',
     marginLeft: 10,
     fontSize: 15,
-    fontWeight: '600',
+    // fontWeight: '600',
     color: COLORS.lightGray,
   },
   vControl: {
@@ -392,8 +407,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameDevice: {
-    textTransform: 'uppercase',
+    fontFamily: 'Raleway-Regular',
+    // textTransform: 'uppercase',
     fontSize: 16,
+    // fontWeight: 'bold',
     color: COLORS.secondary,
   },
   btnSmall: {
@@ -408,17 +425,18 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     shadowColor: '#000',
     shadowOpacity: 0.3,
-    elevation: 8,
+    elevation: 4,
   },
   bottomDevice: {
     paddingBottom: 10,
   },
   //----------------------------------------------------------------
   txtTab: {
+    fontFamily: 'Raleway-Regular',
     color: COLORS.lightGray,
     fontSize: 17,
-    fontWeight: '700',
-    textTransform: 'uppercase',
+    // fontWeight: '700',
+    // textTransform: 'uppercase',
   },
   posTab: {
     position: 'absolute',
