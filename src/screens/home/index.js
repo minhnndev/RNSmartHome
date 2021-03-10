@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useReducer,
-} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -25,14 +19,7 @@ import _ from 'lodash';
 import {TextGradient} from '../../components/index';
 import {COLORS, SIZES} from '../../utils/theme';
 
-import {room} from './listData';
 import API from '../../services/api';
-
-const roomData = Object.keys(room).map((i) => ({
-  key: i,
-  title: room[i],
-  ref: React.createRef(),
-}));
 
 const {width, height} = Dimensions.get('screen');
 
@@ -40,14 +27,14 @@ const Tab = React.forwardRef(({item, onItemPress}, ref) => {
   return (
     <TouchableOpacity onPress={onItemPress}>
       <View ref={ref}>
-        <Text style={styles.txtTab}>{item.title}</Text>
+        <Text style={styles.txtTab}>{item.name}</Text>
       </View>
     </TouchableOpacity>
   );
 });
 
-const Indicator = ({measures, scrollX}) => {
-  const inputRange = roomData.map((_, i) => i * width);
+const Indicator = ({measures, scrollX, data}) => {
+  const inputRange = data.map((r, i) => i * width);
   const indicatorWidth = scrollX.interpolate({
     inputRange,
     outputRange: measures.map((measures) => measures.width),
@@ -76,9 +63,9 @@ const Indicator = ({measures, scrollX}) => {
 };
 
 const Tabs = ({data, scrollX, onItemPress}) => {
-  const [measures, setMeasures] = React.useState([]);
-  const containerRef = useRef();
-  React.useEffect(() => {
+  const [measures, setMeasures] = useState([]);
+  const containerRef = React.useRef();
+  useEffect(() => {
     let m = [];
     data.forEach((item) => {
       item.ref.current.measureLayout(
@@ -96,7 +83,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
         },
       );
     });
-  });
+  }, []);
 
   return (
     <View style={styles.posTab}>
@@ -104,7 +91,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
         {data.map((item, index) => {
           return (
             <Tab
-              key={item.key}
+              key={item.id}
               item={item}
               ref={item.ref}
               onItemPress={() => onItemPress(index)}
@@ -113,7 +100,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
         })}
       </View>
       {measures.length >= 2 && (
-        <Indicator measures={measures} scrollX={scrollX} />
+        <Indicator measures={measures} scrollX={scrollX} data={data} />
       )}
     </View>
   );
@@ -121,40 +108,40 @@ const Tabs = ({data, scrollX, onItemPress}) => {
 
 const Home = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
-  const [widgets, setWidgets] = useState([]);
-  const [tabs, setTabs] = useState([]);
-
-  const initialState = [];
-  function reducer(state, action) {
-    switch (action.type) {
-      case 'increment':
-        return {count: state.count + 1};
-      case 'decrement':
-        return {count: state.count - 1};
-      default:
-        throw new Error();
-    }
-  }
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [rooms, setRoom] = useState([]);
 
   useEffect(() => {
     console.log('Start fetching data from API ...');
     API.get('project')
       .then((res) => {
-        let buttons = res.data.widgets.filter((w) => w.type === 'BUTTON');
-        // let tabs = res.data.widgets.filter((w) => w.type === 'TABS').first.tabs;
-        setWidgets(buttons);
-        // setTabs(tabs);
+        let listRooms = [];
+        let i = 0;
+        res.data.devices.forEach((device) => {
+          let widgets = res.data.widgets.filter(
+            (w) => w.type === 'BUTTON' && w.tabId === i,
+          );
+          let room = {
+            id: i,
+            name: device.name,
+            boardType: device.boardType,
+            connectionType: device.connectionType,
+            widgets: widgets,
+            ref: React.createRef(),
+          };
+          listRooms.push(room);
+          i++;
+        });
+        setRoom(listRooms);
       })
       .then(() => setLoading(false))
       .catch((error) => console.error(error));
     return () => {};
   }, []);
 
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const ref = useRef();
+  const scrollX = React.useRef(new Animated.Value(0)).current;
+  const ref = React.useRef();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const onItemPress = useCallback((itemIndex) => {
+  const onItemPress = React.useCallback((itemIndex) => {
     ref?.current?.scrollToOffset({
       offset: itemIndex * width,
     });
@@ -173,17 +160,17 @@ const Home = ({navigation}) => {
     return `${widget.pin}`;
   };
 
-  const setSwitchValue = (value, index) => {
+  const setSwitchValue = (value, roomId, index) => {
     let newValue = value ? '1' : '0';
-    let widget = widgets[index];
+    let widget = rooms[roomId].widgets[index];
     let URI = 'update/' + getPinShortCode(widget) + '?value=' + newValue;
     API.get(URI).catch((error) => console.error(error));
-    const tempData = _.cloneDeep(widgets);
-    tempData[index].value = newValue;
-    setWidgets(tempData);
+    let roomsVIP = _.clone(rooms);
+    roomsVIP[roomId].widgets[index].value = newValue;
+    setRoom(roomsVIP);
   };
 
-  const listItem = ({item, index}) => (
+  const listItem = (roomId, item, index) => (
     <View style={styles.bottomDevice}>
       <TouchableWithoutFeedback>
         <View style={styles.btnSmall}>
@@ -195,7 +182,7 @@ const Home = ({navigation}) => {
                 true: COLORS.primary,
               }}
               thumbColor={'#f4f3f4'}
-              onValueChange={(value) => setSwitchValue(value, index)}
+              onValueChange={(value) => setSwitchValue(value, roomId, index)}
               value={item.value === '1'}
             />
             <Text>{item.value === '1' ? 'Bật' : 'Tắt'}</Text>
@@ -219,12 +206,12 @@ const Home = ({navigation}) => {
             <Ionicons name="notifications" size={30} color={COLORS.secondary} />
           </TouchableOpacity>
         </View>
-        <Tabs scrollX={scrollX} data={roomData} onItemPress={onItemPress} />
+        <Tabs scrollX={scrollX} data={rooms} onItemPress={onItemPress} />
       </View>
       <View style={{marginTop: 30, height: '100%'}}>
         <Animated.FlatList
           ref={ref}
-          data={roomData}
+          data={rooms}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -233,8 +220,8 @@ const Home = ({navigation}) => {
             [{nativeEvent: {contentOffset: {x: scrollX}}}],
             {useNativeDriver: false},
           )}
-          keyExtractor={(item) => item.key}
-          renderItem={({item}) => {
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({item: room}) => {
             return (
               <View>
                 <View style={styles.bodyContainer}>
@@ -266,12 +253,12 @@ const Home = ({navigation}) => {
                   <View style={styles.vControl}>
                     <View>
                       <TextGradient style={styles.nameRoom}>
-                        {item.title}
+                        {room.name}
                       </TextGradient>
                       <Text style={styles.desc}>
                         Có tổng cộng{' '}
                         <Text style={{color: COLORS.secondary}}>
-                          {widgets.length}
+                          {room.widgets.length}
                         </Text>{' '}
                         thiết bị trong phòng này
                       </Text>
@@ -279,9 +266,11 @@ const Home = ({navigation}) => {
                     <View style={styles.viewDevice}>
                       <FlatList
                         numColumns={2}
-                        data={widgets}
-                        keyExtractor={(item) => item.id}
-                        renderItem={listItem}
+                        data={room.widgets}
+                        keyExtractor={(widget) => widget.id.toString()}
+                        renderItem={({item: widget, index}) => {
+                          return listItem(room.id, widget, index);
+                        }}
                       />
                     </View>
                     <TouchableOpacity
@@ -427,12 +416,7 @@ const styles = StyleSheet.create({
   //----------------------------------------------------------------
   txtTab: {
     color: COLORS.lightGray,
-    fontSize:
-      roomData.length <= 3
-        ? 17
-        : roomData.length === 4
-        ? 15
-        : 60 / roomData.length,
+    fontSize: 17,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
