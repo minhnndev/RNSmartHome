@@ -1,5 +1,12 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useReducer,
+} from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   StyleSheet,
   Dimensions,
@@ -113,18 +120,35 @@ const Tabs = ({data, scrollX, onItemPress}) => {
 };
 
 const Home = ({navigation}) => {
-  const [widgets, setWidgets] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const [widgets, setWidgets] = useState([]);
+  const [tabs, setTabs] = useState([]);
+
+  const initialState = [];
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'increment':
+        return {count: state.count + 1};
+      case 'decrement':
+        return {count: state.count - 1};
+      default:
+        throw new Error();
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     console.log('Start fetching data from API ...');
     API.get('project')
       .then((res) => {
         let buttons = res.data.widgets.filter((w) => w.type === 'BUTTON');
+        // let tabs = res.data.widgets.filter((w) => w.type === 'TABS').first.tabs;
         setWidgets(buttons);
+        // setTabs(tabs);
       })
+      .then(() => setLoading(false))
       .catch((error) => console.error(error));
-    return setLoading(false);
+    return () => {};
   }, []);
 
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -183,7 +207,8 @@ const Home = ({navigation}) => {
 
   return isLoading ? (
     <View>
-      <Text>Chua co du lieu @@ !</Text>
+      <ActivityIndicator size="large" color="#00ff00" />
+      <Text>Đang tải dữ liệu, đợi xíu nhé !</Text>
     </View>
   ) : (
     <SafeAreaView styles={styles.container}>
