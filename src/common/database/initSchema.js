@@ -9,6 +9,7 @@ Room.schema = {
     image: 'string',
     name: 'string',
     times: 'bool',
+    devices: 'Device[]',
   },
 };
 

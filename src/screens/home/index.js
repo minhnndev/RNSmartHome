@@ -17,7 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 
 import {TextGradient} from '../../components/index';
-import {COLORS, SIZES} from '../../utils/theme';
+import {COLORS, SIZES, FONTS} from '../../utils/theme';
 
 import API from '../../services/api';
 
@@ -186,7 +186,7 @@ const Home = ({navigation}) => {
               onValueChange={(value) => setSwitchValue(value, roomId, index)}
               value={item.value === '1'}
             />
-            {/*<Text style={{fontFamily: 'Raleway-Regular'}}>*/}
+            {/* <Text style={{fontFamily: FONTS.regular}}> */}
             {/*  {item.value === '1' ? 'Bật' : 'Tắt'}*/}
             {/*</Text>*/}
           </View>
@@ -266,7 +266,7 @@ const Home = ({navigation}) => {
                           <Text
                             style={{
                               color: COLORS.secondary,
-                              fontFamily: 'Raleway-Regular',
+                              fontFamily: FONTS.regular,
                             }}>
                             {room.widgets.length}
                           </Text>{' '}
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     fontSize: 28,
     //fontWeight: '700',
     color: COLORS.primary,
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     color: COLORS.lightGray,
   },
   subtext: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     fontSize: 16,
     // fontWeight: '400',
     color: COLORS.lightGray,
@@ -361,13 +361,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameRoom: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     fontSize: 22,
     // fontWeight: '700',
     padding: 10,
   },
   desc: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     marginLeft: 10,
     fontSize: 15,
     // fontWeight: '600',
@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameDevice: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     // textTransform: 'uppercase',
     fontSize: 16,
     // fontWeight: 'bold',
@@ -432,11 +432,11 @@ const styles = StyleSheet.create({
   },
   //----------------------------------------------------------------
   txtTab: {
-    fontFamily: 'Raleway-Regular',
+    fontFamily: FONTS.regular,
     color: COLORS.lightGray,
     fontSize: 17,
     // fontWeight: '700',
-    // textTransform: 'uppercase',
+    textTransform: 'uppercase',
   },
   posTab: {
     position: 'absolute',
