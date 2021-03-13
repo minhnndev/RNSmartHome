@@ -52,9 +52,9 @@ export const SIZES = {
 };
 
 export const FONTS = {
-  robotoBlack: {fontFamily: 'Roboto-Black'},
-  robotoBold: {fontFamily: 'Roboto-Bold'},
-  robotoRegular: {fontFamily: 'Roboto-Regular'},
+  black: {fontFamily: 'Raleway-Black'},
+  bold: {fontFamily: 'Raleway-Bold'},
+  regular: {fontFamily: 'Raleway-Regular'},
 };
 
 const appTheme = {COLORS, SIZES, FONTS};

@@ -26,54 +26,58 @@ const Icon = ({name}) => {
   );
 };
 
+const OptionBar = (props) => {
+  return (
+    <TouchableOpacity onPress={props.onPress}>
+      <View style={styles.optionBar}>
+        <Icon name={props.icon} />
+        <Text style={styles.content}>{props.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const Profile = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.top}>
-          <TextGradient style={styles.name}>Smart Home</TextGradient>
-          <View style={styles.containerMember}>
-            <Image
-              source={require('../../assets/img/avatar_blank.png')}
-              style={styles.imageMember}
-            />
-            <View style={{marginHorizontal: 20}}>
-              <Text style={styles.nameMember}>Fullname</Text>
-              <Text style={styles.content}>SmartHome.Cloud</Text>
-            </View>
+      <View style={styles.top}>
+        <TextGradient style={styles.name}>Smart Home</TextGradient>
+        <View style={styles.containerMember}>
+          <Image
+            source={require('../../assets/img/avatar_blank.png')}
+            style={styles.imageMember}
+          />
+          <View style={{marginHorizontal: 20}}>
+            <Text style={styles.nameMember}>Fullname</Text>
+            <Text style={styles.content}>SmartHome.Cloud</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-          <View style={styles.optionBar}>
-            <Icon name="user" />
-            <Text style={styles.content}>Account Manager</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
-          <View style={styles.optionBar}>
-            <Icon name="lock" />
-            <Text style={styles.content}>Privacy</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Support')}>
-          <View style={styles.optionBar}>
-            <Icon name="customerservice" />
-            <Text style={styles.content}>Support</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
-          <View style={styles.optionBar}>
-            <Icon name="setting" />
-            <Text style={styles.content}>Setting</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('About')}>
-          <View style={styles.optionBar}>
-            <Icon name="info" />
-            <Text style={styles.content}>Info</Text>
-          </View>
-        </TouchableOpacity>
+        <OptionBar
+          onPress={() => navigation.navigate('Account')}
+          icon="user"
+          title="Account Manager"
+        />
+        <OptionBar
+          onPress={() => navigation.navigate('Privacy')}
+          icon="lock"
+          title="Privacy"
+        />
+        <OptionBar
+          onPress={() => navigation.navigate('Support')}
+          icon="customerservice"
+          title="Support"
+        />
+        <OptionBar
+          onPress={() => navigation.navigate('Setting')}
+          icon="setting"
+          title="Setting"
+        />
+        <OptionBar
+          onPress={() => navigation.navigate('About')}
+          icon="info"
+          title="Info"
+        />
       </View>
       <TouchableOpacity
         onPress={() => navigation.navigate('Auth')}
