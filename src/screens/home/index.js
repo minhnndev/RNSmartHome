@@ -109,6 +109,7 @@ const Tabs = ({data, scrollX, onItemPress}) => {
 const Home = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
   const [rooms, setRoom] = useState([]);
+  const [labels, setLables] = useState([]);
 
   useEffect(() => {
     console.log('Start fetching data from API ...');
@@ -135,7 +136,19 @@ const Home = ({navigation}) => {
       })
       .then(() => setLoading(false))
       .catch((error) => console.error(error));
-    return () => {};
+    const _interval = setInterval(() => {
+      API.get('project')
+        .then((res) => {
+          let _lables = res.data.widgets.filter(
+            (w) => w.type === 'LABELED_VALUE_DISPLAY',
+          );
+          setLables(_lables);
+        })
+        .catch((error) => console.error(error));
+    }, 2000);
+    return () => {
+      clearInterval(_interval);
+    };
   }, []);
 
   const scrollX = React.useRef(new Animated.Value(0)).current;
@@ -236,7 +249,13 @@ const Home = ({navigation}) => {
                           size={30}
                           color={COLORS.secondary}
                         />
-                        <Text style={styles.txtPara}>27°C</Text>
+                        <Text style={styles.txtPara}>
+                          {' '}
+                          {labels[1]
+                            ? parseFloat(labels[1].value).toFixed(1)
+                            : '--'}
+                          °C
+                        </Text>
                       </View>
                       <Text style={styles.subtext}>Nhiệt độ</Text>
                     </View>
@@ -247,7 +266,13 @@ const Home = ({navigation}) => {
                           size={30}
                           color={COLORS.secondary}
                         />
-                        <Text style={styles.txtPara}> 48.5%</Text>
+                        <Text style={styles.txtPara}>
+                          {' '}
+                          {labels[0]
+                            ? parseFloat(labels[0].value).toFixed(1)
+                            : '--'}
+                          %
+                        </Text>
                       </View>
                       <Text style={styles.subtext}>Độ ẩm</Text>
                     </View>
