@@ -109,6 +109,8 @@ const Tabs = ({data, scrollX, onItemPress}) => {
 const Home = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
   const [rooms, setRoom] = useState([]);
+
+  // store data from sensors
   const [labels, setLables] = useState([]);
 
   useEffect(() => {
