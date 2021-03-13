@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native';
+
 const {width, height} = Dimensions.get('window');
 export const BANNER_H = 350;
 export const TOPNAVI_H = 50;
@@ -51,6 +52,7 @@ export const SIZES = {
   height,
 };
 
+// font family global
 export const FONTS = {
   black: {fontFamily: 'Raleway-Black'},
   bold: {fontFamily: 'Raleway-Bold'},

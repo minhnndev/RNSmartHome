@@ -201,7 +201,7 @@ const Home = ({navigation}) => {
               onValueChange={(value) => setSwitchValue(value, roomId, index)}
               value={item.value === '1'}
             />
-            {/* <Text style={{fontFamily: FONTS.regular}}> */}
+            {/* <Text style={{...FONTS.regular}}> */}
             {/*  {item.value === '1' ? 'Bật' : 'Tắt'}*/}
             {/*</Text>*/}
           </View>
@@ -293,7 +293,7 @@ const Home = ({navigation}) => {
                           <Text
                             style={{
                               color: COLORS.secondary,
-                              fontFamily: FONTS.regular,
+                              ...FONTS.regular,
                             }}>
                             {room.widgets.length}
                           </Text>{' '}
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     fontSize: 28,
     //fontWeight: '700',
     color: COLORS.primary,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     color: COLORS.lightGray,
   },
   subtext: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     fontSize: 16,
     // fontWeight: '400',
     color: COLORS.lightGray,
@@ -388,13 +388,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameRoom: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     fontSize: 22,
     // fontWeight: '700',
     padding: 10,
   },
   desc: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     marginLeft: 10,
     fontSize: 15,
     // fontWeight: '600',
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameDevice: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     // textTransform: 'uppercase',
     fontSize: 16,
     // fontWeight: 'bold',
@@ -459,11 +459,11 @@ const styles = StyleSheet.create({
   },
   //----------------------------------------------------------------
   txtTab: {
-    fontFamily: FONTS.regular,
+    ...FONTS.regular,
     color: COLORS.lightGray,
     fontSize: 17,
     // fontWeight: '700',
-    textTransform: 'uppercase',
+    // textTransform: 'uppercase',
   },
   posTab: {
     position: 'absolute',
