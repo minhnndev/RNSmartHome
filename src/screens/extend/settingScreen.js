@@ -7,12 +7,10 @@ import {COLORS} from '../../utils/theme';
 const Setting = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Setting" backBtn />
+      <Header title="Cài đặt" backBtn />
       <View style={styles.main}>
-        <View style={styles.potisionBtn}>
-          <TextInput />
-          <Button title="Save" style={styles.btn} />
-        </View>
+        <InputValue title="Thay đổi IP: " />
+        <Button title="Lưu" style={styles.btn} />
       </View>
     </SafeAreaView>
   );
@@ -33,7 +31,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 30,
-    width: 50,
+    width: 150,
     height: 50,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',

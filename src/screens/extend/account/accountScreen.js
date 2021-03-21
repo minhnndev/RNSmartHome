@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Header} from '../../../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {COLORS} from '../../../utils/theme';
+import {Styles} from '../../../utils/Styles';
 
 const Icon = ({name}) => {
   return (
@@ -21,7 +22,7 @@ const Profile = () => {
   const navigation = useNavigation();
   return (
     <>
-      <Header title="Account Manager" backBtn />
+      <Header title="Quản lí tài khoản" backBtn />
       <View style={styles.container}>
         <View style={styles.top}>
           <View style={styles.containerMember}>
@@ -29,10 +30,10 @@ const Profile = () => {
               source={require('../../../assets/img/avatar_blank.png')}
               style={styles.imageMember}
             />
-            <Text style={[styles.nameMember]}>Fullname</Text>
+            <Text style={[styles.nameMember]}>TM Platform</Text>
           </View>
           <View style={styles.infoBar}>
-            <Text style={styles.title}>Account:</Text>
+            <Text style={styles.title}>Tài khoản:</Text>
             <Text style={styles.content}>smarthome@gmail.com</Text>
           </View>
           <View style={styles.infoBar}>
@@ -45,11 +46,17 @@ const Profile = () => {
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('Password')}>
             <View style={styles.infoBar}>
-              <Text style={styles.title}>Password</Text>
+              <Text style={styles.title}>Mật khẩu</Text>
               <AntDesign name="right" size={22} color={COLORS.lightGray} />
             </View>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Auth')}
+          style={styles.btn}>
+          <Text style={[Styles.textAlign, styles.content]}>Đăng xuất</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -60,12 +67,11 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 20,
     justifyContent: 'space-between',
-    backgroundColor: COLORS.white,
   },
   top: {
     padding: 20,
+    backgroundColor: COLORS.white,
   },
   imageMember: {
     width: 52,

@@ -54,9 +54,9 @@ export const SIZES = {
 
 // font family global
 export const FONTS = {
-  black: {fontFamily: 'Raleway-Black'},
-  bold: {fontFamily: 'Raleway-Bold'},
-  regular: {fontFamily: 'Raleway-Regular'},
+  black: 'Raleway-Black',
+  bold: 'Raleway-Bold',
+  regular: 'Raleway-Regular',
 };
 
 const appTheme = {COLORS, SIZES, FONTS};
