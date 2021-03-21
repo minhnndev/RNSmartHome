@@ -5,7 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Touchable,
+  ToastAndroid,
   FlatList,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -39,9 +39,28 @@ const OptionBar = (props) => {
 };
 
 const Profile = () => {
+  const showToastGoogleAssistants = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'Google Assistants đã được tích hợp sẵn',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150,
+    );
+  };
+  const showToastDefaults = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'Dịch vụ chưa được hỗ trợ',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150,
+    );
+  };
+
   const images = {
-    Google: require('../../assets/img/GoogleAssistant.png'),
     Alexa: require('../../assets/img/AmazonAlexa.png'),
+    Google: require('../../assets/img/GoogleAssistant.png'),
     Siri: require('../../assets/img/AppleSiri.png'),
   };
   const DATA = Object.keys(images).map((i) => ({
@@ -77,7 +96,16 @@ const Profile = () => {
             return (
               <View style={styles.assistantTab}>
                 <View style={styles.imgTit}>
-                  <Image source={item.image} style={styles.imageMember} />
+                  {item.key === 'Google' ? (
+                    <TouchableOpacity
+                      onPress={() => showToastGoogleAssistants()}>
+                      <Image source={item.image} style={styles.imageMember} />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={() => showToastDefaults()}>
+                      <Image source={item.image} style={styles.imageMember} />
+                    </TouchableOpacity>
+                  )}
                   <Text style={styles.content}>{item.title}</Text>
                 </View>
               </View>
@@ -89,7 +117,7 @@ const Profile = () => {
         <OptionBar
           onPress={() => navigation.navigate('Account')}
           icon="user"
-          title="Account Manager"
+          title="Quản lí tài khoản"
         />
         <OptionBar
           onPress={() => navigation.navigate('Privacy')}
@@ -99,17 +127,17 @@ const Profile = () => {
         <OptionBar
           onPress={() => navigation.navigate('Support')}
           icon="customerservice"
-          title="Support"
+          title="Hỗ trợ & FAQ"
         />
         <OptionBar
           onPress={() => navigation.navigate('Setting')}
           icon="setting"
-          title="Setting"
+          title="Cài đặt"
         />
         <OptionBar
           onPress={() => navigation.navigate('About')}
           icon="info"
-          title="Info"
+          title="Thông tin"
         />
       </View>
     </View>
