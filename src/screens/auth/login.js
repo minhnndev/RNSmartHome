@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, ToastAndroid, View} from 'react-native';
 
 import InputValue from '../../components/InputValue';
 import Button from '../../components/Button';
@@ -9,18 +9,51 @@ import {COLORS} from '../../utils/theme';
 const Login = () => {
   const navigation = useNavigation();
 
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('123456');
+
+  const credentials = {
+    username: 'admin',
+    password: '123456',
+  };
+
+  const onPressLogin = () => {
+    if (
+      username !== credentials.username ||
+      password !== credentials.password
+    ) {
+      ToastAndroid.showWithGravityAndOffset(
+        'Tài khoản hoặc mật khẩu không chính xác !',
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        25,
+        150,
+      );
+      return;
+    }
+    navigation.navigate('Home');
+  };
+
   return (
     <>
       <View style={styles.formInput}>
-        <InputValue title="Username" icon="user" />
-        <InputValue title="Password" icon="lock" isPassword />
+        <InputValue
+          title="Tài khoản"
+          placeholder={'Tài khoản'}
+          icon="user"
+          onChangeText={setUsername}
+          value={username}
+        />
+        <InputValue
+          title="Mật khẩu"
+          icon="lock"
+          isPassword
+          onChangeText={setPassword}
+          value={password}
+        />
       </View>
       <View style={styles.button}>
-        <Button
-          title="Login"
-          onPress={() => navigation.navigate('Home')}
-          style={styles.btn}
-        />
+        <Button title="Đăng nhập" onPress={onPressLogin} style={styles.btn} />
       </View>
     </>
   );

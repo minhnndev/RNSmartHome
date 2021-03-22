@@ -3,6 +3,7 @@ import {StyleSheet, Text} from 'react-native';
 import MaskedView from '@react-native-community/masked-view';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS} from '../utils/theme';
+
 const TextGradient = (props) => {
   return (
     <MaskedView maskElement={<Text {...props} />}>

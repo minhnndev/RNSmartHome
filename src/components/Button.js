@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 17,
     fontWeight: '600',
+    color: '#fff',
   },
 });
