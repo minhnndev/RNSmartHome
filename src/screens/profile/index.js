@@ -5,12 +5,13 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Touchable,
+  ToastAndroid,
+  FlatList,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {COLORS} from '../../utils/theme';
+import {COLORS, SIZES} from '../../utils/theme';
 import {Styles} from '../../utils/Styles';
 
 import {TextGradient} from '../../components';
@@ -38,10 +39,41 @@ const OptionBar = (props) => {
 };
 
 const Profile = () => {
+  const showToastGoogleAssistants = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'Google Assistants đã được tích hợp sẵn',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150,
+    );
+  };
+  const showToastDefaults = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'Dịch vụ chưa được hỗ trợ',
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      150,
+    );
+  };
+
+  const images = {
+    Alexa: require('../../assets/img/AmazonAlexa.png'),
+    Google: require('../../assets/img/GoogleAssistant.png'),
+    Siri: require('../../assets/img/AppleSiri.png'),
+  };
+  const DATA = Object.keys(images).map((i) => ({
+    key: i,
+    title: i,
+    image: images[i],
+    ref: React.createRef(),
+  }));
+
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
+      <View style={styles.block}>
         <TextGradient style={styles.name}>Smart Home</TextGradient>
         <View style={styles.containerMember}>
           <Image
@@ -49,14 +81,43 @@ const Profile = () => {
             style={styles.imageMember}
           />
           <View style={{marginHorizontal: 20}}>
-            <Text style={styles.nameMember}>Fullname</Text>
+            <Text style={styles.nameMember}>TM Platform</Text>
             <Text style={styles.content}>SmartHome.Cloud</Text>
           </View>
         </View>
+      </View>
+      <View style={[styles.assistant, styles.block]}>
+        <Text style={styles.content}>Trợ lí ảo</Text>
+        <FlatList
+          data={DATA}
+          horizontal
+          keyExtractor={(item) => item.key}
+          renderItem={({item}) => {
+            return (
+              <View style={styles.assistantTab}>
+                <View style={styles.imgTit}>
+                  {item.key === 'Google' ? (
+                    <TouchableOpacity
+                      onPress={() => showToastGoogleAssistants()}>
+                      <Image source={item.image} style={styles.imageMember} />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={() => showToastDefaults()}>
+                      <Image source={item.image} style={styles.imageMember} />
+                    </TouchableOpacity>
+                  )}
+                  <Text style={styles.content}>{item.title}</Text>
+                </View>
+              </View>
+            );
+          }}
+        />
+      </View>
+      <View style={styles.block}>
         <OptionBar
           onPress={() => navigation.navigate('Account')}
           icon="user"
-          title="Account Manager"
+          title="Quản lí tài khoản"
         />
         <OptionBar
           onPress={() => navigation.navigate('Privacy')}
@@ -66,24 +127,19 @@ const Profile = () => {
         <OptionBar
           onPress={() => navigation.navigate('Support')}
           icon="customerservice"
-          title="Support"
+          title="Hỗ trợ & FAQ"
         />
         <OptionBar
           onPress={() => navigation.navigate('Setting')}
           icon="setting"
-          title="Setting"
+          title="Cài đặt"
         />
         <OptionBar
           onPress={() => navigation.navigate('About')}
           icon="info"
-          title="Info"
+          title="Thông tin"
         />
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Auth')}
-        style={styles.btn}>
-        <Text style={[Styles.textAlign, styles.content]}>Log out</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -93,27 +149,22 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 5,
-    marginBottom: 20,
-    justifyContent: 'space-between',
   },
   name: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '700',
     color: COLORS.primary,
     paddingVertical: 20,
   },
-  top: {
-    backgroundColor: COLORS.white,
+  block: {
     paddingHorizontal: 20,
-    marginBottom: 10,
+    backgroundColor: COLORS.white,
   },
+
   imageMember: {
-    width: 52,
-    height: 52,
+    width: 55,
+    height: 55,
     borderRadius: 30,
-    borderWidth: 3,
-    borderColor: COLORS.lightGray,
   },
   optionBar: {
     flexDirection: 'row',
@@ -123,12 +174,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameMember: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 26,
+    fontWeight: '600',
     color: COLORS.black,
   },
   content: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '500',
     color: COLORS.lightGray,
   },
@@ -137,8 +188,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 20,
   },
+  assistant: {
+    marginVertical: 10,
+  },
   btn: {
     backgroundColor: COLORS.white,
     paddingVertical: 20,
+  },
+  imgTit: {
+    width: (SIZES.width - 45) / 3,
+    padding: 10,
+    alignItems: 'center',
   },
 });

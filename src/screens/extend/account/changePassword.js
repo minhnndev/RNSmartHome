@@ -13,14 +13,14 @@ import {COLORS} from '../../../utils/theme';
 const ChangePassword = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Change Password" backBtn />
+      <Header title="Thay đổi mật khẩu" backBtn />
       <View style={styles.main}>
-        <InputValue title="Old Password" icon="lock" />
-        <InputValue title="New Password" icon="lock" />
-        <InputValue title="Confirm Password" icon="lock" />
+        <InputValue title="Mật khẩu cũ" icon="lock" isPassword />
+        <InputValue title="Mật khẩu mới" icon="lock" isPassword />
+        <InputValue title="Nhập lại mật khẩu" icon="lock" isPassword />
         <View style={styles.potisionBtn}>
           <View />
-          <Button title="Save" style={styles.btn} />
+          <Button title="Lưu" style={styles.btn} />
           <View />
         </View>
       </View>
