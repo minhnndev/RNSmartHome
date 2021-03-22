@@ -9,7 +9,6 @@ import VoiceScreen from '../screens/intro/voice';
 import ProfileScreen from '../screens/profile';
 
 import {COLORS} from '../utils/theme';
-import VoiceTest from '../screens/intro/voice';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,16 +20,19 @@ const HomeTabs = () => {
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
-
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home';
-          } else if (route.name === 'Service') {
-            iconName = focused ? 'rocket' : 'rocket';
-          } else if (route.name === 'User') {
-            iconName = focused ? 'user' : 'user';
-          } else if (route.name === 'Voice') {
-            iconName = focused ? 'microphone' : 'microphone';
-            return <FontAwesome name={iconName} size={size} color={color} />;
+          switch (route.name) {
+            case 'Home':
+              iconName = focused ? 'home' : 'home';
+              break;
+            case 'Service':
+              iconName = focused ? 'rocket' : 'rocket';
+              break;
+            case 'User':
+              iconName = focused ? 'user' : 'user';
+              break;
+            case 'Voice':
+              iconName = focused ? 'microphone' : 'microphone';
+              return <FontAwesome name={iconName} size={size} color={color} />;
           }
           return <IconEntypo name={iconName} size={size} color={color} />;
         },
