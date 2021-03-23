@@ -8,7 +8,7 @@
 
 import React from 'react';
 import 'react-native-gesture-handler';
-import AppContainer from './navigation/index';
+import AppContainer from './navigation';
 
 const App = () => {
   return <AppContainer />;
