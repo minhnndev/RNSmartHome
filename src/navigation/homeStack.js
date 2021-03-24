@@ -17,12 +17,7 @@ const homeStack = createStackNavigator();
 
 const HomeStackScreen = () => {
   return (
-    <homeStack.Navigator initialRouteName="Auth">
-      <homeStack.Screen
-        name="Auth"
-        component={AuthScreen}
-        options={{headerShown: false}}
-      />
+    <homeStack.Navigator initialRouteName="Home">
       <homeStack.Screen
         name="Home"
         component={HomeTabs}

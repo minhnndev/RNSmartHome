@@ -1,8 +1,18 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-
+import React, {useState, useContext} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+
+import {AuthContext} from '../../common/redux/context';
+import {Users} from '../../common/database/models/users';
 
 import {TextGradient, InputValue, Button} from '../../components';
 
@@ -16,7 +26,7 @@ const ButtonIcon = ({nameIcon, color}) => {
   );
 };
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [data, setData] = useState({
     username: '',
     password: '',
@@ -25,8 +35,10 @@ const Login = () => {
     isValidPassword: true,
   });
 
-  const textHandleInput = (val) => {
-    if (val.trim().lenght >= 4) {
+  const {signIn} = useContext(AuthContext);
+
+  const textInputChange = (val) => {
+    if (val.trim().length >= 4) {
       setData({
         ...data,
         username: val,
@@ -43,25 +55,112 @@ const Login = () => {
     }
   };
 
-  const navigation = useNavigation();
+  const handlePasswordChange = (val) => {
+    if (val.trim().length >= 8) {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: true,
+      });
+    } else {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: false,
+      });
+    }
+  };
+
+  const handleValidUser = (val) => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        isValidUser: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+      });
+    }
+  };
+
+  const loginHandle = (userName, passWord) => {
+    const foundUser = Users.filter((item) => {
+      return userName === item.username && passWord === item.password;
+    });
+
+    if (data.username.length === 0 || data.password.length === 0) {
+      Alert.alert(
+        'Nhập thông tin sai',
+        'Tài khoản hoặc mật khẩu không được để trống!',
+        [{text: 'Ok'}],
+      );
+      return;
+    }
+
+    if (foundUser.length === 0) {
+      Alert.alert(
+        'Người dùng không tồn tại',
+        'Tài khoản hoặc mật khẩu không chính xác!',
+        [{text: 'Ok'}],
+      );
+      return;
+    }
+    signIn(foundUser);
+  };
 
   return (
     <View style={styles.container}>
       <View>
-        <TextGradient style={styles.txtLogo}>SmartHome</TextGradient>
+        <TextGradient style={styles.txtLogo}>TM Platform</TextGradient>
         <Image
           source={require('../../assets/img/logo.png')}
           style={styles.tinyLogo}
         />
       </View>
       <View style={styles.formInput}>
-        <InputValue title="Username" icon="user" />
-        <InputValue title="Password" icon="lock" isPassword />
+        <View>
+          <InputValue
+            title="MSSV"
+            icon="user"
+            keyboardType="numeric"
+            onChangeText={(username) => textInputChange(username)}
+            onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+          />
+          {data.check_textInputChange ? (
+            <Animatable.View animation="bounceIn">
+              <Feather name="check-circle" color="green" size={20} />
+            </Animatable.View>
+          ) : null}
+          {data.isValidUser ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>
+                Tên người dùng phải dài 4 ký tự.
+              </Text>
+            </Animatable.View>
+          )}
+        </View>
+        <View>
+          <InputValue
+            title="Mật khẩu"
+            icon="lock"
+            onChangeText={(password) => handlePasswordChange(password)}
+            isPassword
+          />
+          {data.isValidPassword ? null : (
+            <Animatable.View animation="fadeInLeft" duration={500}>
+              <Text style={styles.errorMsg}>Mật khẩu phải dài 8 ký tự.</Text>
+            </Animatable.View>
+          )}
+        </View>
       </View>
       <View style={styles.button}>
         <Button
-          title="Login"
-          onPress={() => navigation.navigate('Home')}
+          title="Đăng nhập"
+          onPress={() => {
+            loginHandle(data.username, data.password);
+          }}
           style={styles.btn}
         />
       </View>
@@ -69,7 +168,7 @@ const Login = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate('Register')}
           style={styles.btnRegis}>
-          <Text style={styles.btnText}>Register</Text>
+          <Text style={styles.btnText}>Đăng kí</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>

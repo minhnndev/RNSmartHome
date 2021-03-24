@@ -1,24 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
+import {AuthContext} from '../../../common/redux/context';
 
 import {Header} from '../../../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {COLORS} from '../../../utils/theme';
 import {Styles} from '../../../utils/Styles';
 
-const Icon = ({name}) => {
-  return (
-    <AntDesign
-      name={name}
-      size={28}
-      color={COLORS.lightGray}
-      style={{marginHorizontal: 10}}
-    />
-  );
-};
-
 const Profile = () => {
+  const {signOut} = useContext(AuthContext);
   const navigation = useNavigation();
   return (
     <>
@@ -53,7 +45,9 @@ const Profile = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('Auth')}
+          onPress={() => {
+            signOut();
+          }}
           style={styles.btn}>
           <Text style={[Styles.textAlign, styles.content]}>Đăng xuất</Text>
         </TouchableOpacity>
