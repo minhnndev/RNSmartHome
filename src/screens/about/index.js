@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, Image, Animated} from 'react-native';
 
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {COLORS, SIZES} from '../../utils/theme';
 import {Styles} from '../../utils/Styles';
 import {TextGradient, Header, Accordian} from '../../components';

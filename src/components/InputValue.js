@@ -16,6 +16,7 @@ export default function InputValue({
   onChangeText,
   keyboardType,
   value,
+  placeholder,
   props,
 }) {
   const [show, setShow] = useState(false);
@@ -27,6 +28,7 @@ export default function InputValue({
       <View style={styles.inputContainer}>
         <Icons name={icon} size={22} color="#d3d4d5" />
         <TextInput
+          placeholder={placeholder}
           style={styles.input}
           keyboardType={keyboardType}
           onChangeText={onChangeText}

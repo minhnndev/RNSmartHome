@@ -1,12 +1,28 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image, ToastAndroid} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import {TextGradient, InputValue, Button} from '../../components';
-
 import {COLORS} from '../../utils/theme';
+
+const Register = () => {
+  const navigation = useNavigation();
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const onPressRegister = () => {
+    ToastAndroid.showWithGravityAndOffset(
+      'Chức năng đăng ký tài khoản tạm thời đóng !',
+      ToastAndroid.SHORT,
+      ToastAndroid.TOP,
+      25,
+      150,
+    );
+    // navigation.navigate('Home');
+  };
 
 const ButtonIcon = ({nameIcon, color}) => {
   return (
@@ -19,22 +35,34 @@ const ButtonIcon = ({nameIcon, color}) => {
 const Login = () => {
   const navigation = useNavigation();
 
-  return (
-    <View style={styles.container}>
-      <View>
-        <TextGradient style={styles.txtLogo}>SmartHome</TextGradient>
-        <Image
-          source={require('../../assets/img/logo.png')}
-          style={styles.tinyLogo}
+        <InputValue
+          title="Tài khoản"
+          icon="user"
+          onChangeText={setUsername}
+          value={username}
+        />
+        <InputValue
+          title="Mật khẩu"
+          icon="lock"
+          isPassword
+          onChangeText={setPassword}
+          value={password}
+        />
+        <InputValue
+          title="Nhập lại mật khẩu"
+          icon="lock"
+          isPassword
+          onChangeText={setConfirmPassword}
+          value={confirmPassword}
         />
       </View>
-      <View style={styles.formInput}>
-        <InputValue title="Username" icon="user" />
-        <InputValue title="Password" icon="lock" isPassword />
-        <InputValue title="Password" icon="lock" isPassword />
-      </View>
       <View style={styles.button}>
-        <Button title="Register" style={styles.btn} />
+        <Button
+          title="Đăng ký"
+          target="Home"
+          style={styles.btn}
+          onPress={onPressRegister}
+        />
       </View>
       <View style={styles.button}>
         <TouchableOpacity
@@ -47,7 +75,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {

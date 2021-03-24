@@ -23,41 +23,41 @@ const ButtonIcon = ({nameIcon, color}) => {
   );
 };
 
-const auth = () => {
-  const [tab, setTab] = React.useState(0);
+const Auth = () => {
+  const [tab, setTab] = React.useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <TextGradient style={styles.txtLogo}>SmartHome</TextGradient>
+        <TextGradient style={styles.txtLogo}>TM Platform</TextGradient>
+        <TextGradient style={styles.txtSlogan}>
+          Nền tảng nhà thông minh cho gia đình
+        </TextGradient>
         <Image
-          source={require('../../assets/img/logo.png')}
+          source={require('../../assets/img/logo-blue.png')}
           style={styles.tinyLogo}
         />
       </View>
-      {tab === 0 && <Login />}
-      {tab === 1 && <Register />}
+      {tab ? <Register /> : <Login />}
       <View style={styles.button}>
-        <TouchableOpacity
-          onPress={() => (tab === 1 ? setTab(0) : setTab(1))}
-          style={styles.btnRegis}>
-          <Text style={styles.btnText}>{tab === 1 ? 'Login' : 'Register'}</Text>
+        <TouchableOpacity onPress={() => setTab(!tab)} style={styles.btnRegis}>
+          <Text style={styles.btnText}>{tab ? 'Đăng nhập' : 'Đăng ký'}</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          OR {tab === 0 ? 'LOGIN' : 'REGISTER'} WITH
-        </Text>
-        <View style={styles.listButtonAccount}>
-          <ButtonIcon nameIcon="twitter" color="#1DA1F2" />
-          <ButtonIcon nameIcon="google" color="#DB4437" />
-          <ButtonIcon nameIcon="facebook-square" color="#4267B2" />
+      {!tab && (
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>đăng nhập với</Text>
+          <View style={styles.listButtonAccount}>
+            <ButtonIcon nameIcon="twitter" color="#1DA1F2" />
+            <ButtonIcon nameIcon="google" color="#DB4437" />
+            <ButtonIcon nameIcon="facebook-square" color="#4267B2" />
+          </View>
         </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 };
 
-export default auth;
+export default Auth;
 
 const styles = StyleSheet.create({
   container: {
@@ -72,7 +72,11 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     textAlign: 'center',
-    padding: 25,
+    paddingTop: 25,
+  },
+  txtSlogan: {
+    textAlign: 'center',
+    paddingBottom: 25,
   },
   formInput: {
     marginHorizontal: 30,
@@ -100,11 +104,11 @@ const styles = StyleSheet.create({
   listButtonAccount: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 30,
+    paddingVertical: 10,
     paddingHorizontal: 40,
   },
   footer: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingVertical: 5,
   },
   footerText: {
