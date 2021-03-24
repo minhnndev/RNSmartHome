@@ -14,8 +14,10 @@ const Login = () => {
     isValidPassword: true,
   });
 
-  const textHandleInput = (val) => {
-    if (val.trim().lenght >= 4) {
+  const {signIn} = useContext(AuthContext);
+
+  const textInputChange = (val) => {
+    if (val.trim().length >= 4) {
       setData({
         ...data,
         username: val,
@@ -32,7 +34,60 @@ const Login = () => {
     }
   };
 
-  const navigation = useNavigation();
+  const handlePasswordChange = (val) => {
+    if (val.trim().length >= 8) {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: true,
+      });
+    } else {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: false,
+      });
+    }
+  };
+
+  const handleValidUser = (val) => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        isValidUser: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+      });
+    }
+  };
+
+  const loginHandle = (userName, passWord) => {
+    const foundUser = Users.filter((item) => {
+      return userName === item.username && passWord === item.password;
+    });
+
+    if (data.username.length === 0 || data.password.length === 0) {
+      Alert.alert(
+        'Nhập thông tin sai',
+        'Tài khoản hoặc mật khẩu không được để trống!',
+        [{text: 'Ok'}],
+      );
+      return;
+    }
+
+    if (foundUser.length === 0) {
+      Alert.alert(
+        'Người dùng không tồn tại',
+        'Tài khoản hoặc mật khẩu không chính xác!',
+        [{text: 'Ok'}],
+      );
+      return;
+    }
+    signIn(foundUser);
+  };
 
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('123456');
