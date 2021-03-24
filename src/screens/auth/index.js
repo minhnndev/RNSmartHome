@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,10 +6,10 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import TextGradient from '../../components/TextGradient';
 
 import Login from './login';
@@ -25,6 +25,27 @@ const ButtonIcon = ({nameIcon, color}) => {
 
 const Auth = () => {
   const [tab, setTab] = React.useState(false);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 5000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    // Will change fadeAnim value to 0 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 5000,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -37,9 +58,19 @@ const Auth = () => {
           style={styles.tinyLogo}
         />
       </View>
-      {tab ? <Register /> : <Login />}
+      <Animated.View
+        style={{
+          opacity: fadeAnim,
+        }}>
+        {tab ? <Register /> : <Login />}
+      </Animated.View>
       <View style={styles.button}>
-        <TouchableOpacity onPress={() => setTab(!tab)} style={styles.btnRegis}>
+        <TouchableOpacity
+          onPress={() => {
+            fadeIn();
+            // setTab(!tab);
+          }}
+          style={styles.btnRegis}>
           <Text style={styles.btnText}>{tab ? 'Đăng nhập' : 'Đăng ký'}</Text>
         </TouchableOpacity>
       </View>
@@ -78,17 +109,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 25,
   },
-  formInput: {
-    marginHorizontal: 30,
-  },
   button: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btnRegis: {
-    paddingVertical: 10,
-  },
   btnText: {
+    paddingTop: 20,
     fontSize: 16,
     fontWeight: '600',
   },
