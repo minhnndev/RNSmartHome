@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AuthScreen from '../screens/auth';
 import ProjectScreen from '../screens/project';
 import DeviceScreen from '../screens/device/index';
 import DeviceDetailScreen from '../screens/device/detail';
