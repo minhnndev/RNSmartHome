@@ -6,14 +6,12 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  ScrollView,
-  Platform,
-  AlertIOS,
-  ToastAndroid,
+  SafeAreaView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {material, robotoWeights} from 'react-native-typography';
 
 import {AuthContext} from '../../common/redux/context';
 import {Users} from '../../common/database/models/users';
@@ -123,7 +121,7 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <TextGradient style={styles.txtLogo}>TM Platform</TextGradient>
         <TextGradient style={styles.txtSlogan}>
@@ -205,7 +203,7 @@ const Login = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -225,12 +223,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 160,
   },
   txtLogo: {
+    ...material.title,
     fontSize: 40,
-    fontWeight: '700',
     textAlign: 'center',
-    paddingTop: 25,
+    paddingTop: 40,
+    paddingBottom: 10,
   },
   txtSlogan: {
+    ...material.caption,
     fontSize: 16,
     textAlign: 'center',
     paddingBottom: 25,

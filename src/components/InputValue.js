@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Feather';
 import {COLORS} from '../utils/theme';
+import {material} from 'react-native-typography';
 
 export default function InputValue({
   title,
@@ -74,8 +75,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   title: {
+    ...material.caption,
     color: '#8a8b8c',
-    fontWeight: '400',
     marginVertical: 8,
     fontSize: 14,
   },

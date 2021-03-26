@@ -20,6 +20,7 @@ import {TextGradient} from '../../components/index';
 import {COLORS, SIZES, FONTS} from '../../utils/theme';
 
 import API from '../../services/api';
+import {material} from 'react-native-typography';
 
 const {width, height} = Dimensions.get('screen');
 
@@ -116,30 +117,31 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     console.log('Start fetching data from API ...');
-    API.get('project')
-      .then((res) => {
-        let listRooms = [];
-        let i = 0;
-        res.data.devices.forEach((device) => {
-          let widgets = res.data.widgets.filter(
-            (w) => w.type === 'BUTTON' && w.tabId === i,
-          );
-          let room = {
-            id: i,
-            name: device.name,
-            boardType: device.boardType,
-            connectionType: device.connectionType,
-            widgets: widgets,
-            ref: React.createRef(),
-          };
-          listRooms.push(room);
-          i++;
-        });
-        setRoom(listRooms);
-      })
-      .then(() => setLoading(false))
-      .catch((error) => console.error(error));
     const _interval = setInterval(() => {
+      API.get('project')
+        .then((res) => {
+          let listRooms = [];
+          let i = 0;
+          res.data.devices.forEach((device) => {
+            let widgets = res.data.widgets.filter(
+              (w) => w.type === 'BUTTON' && w.tabId === i,
+            );
+            let room = {
+              id: i,
+              name: device.name,
+              boardType: device.boardType,
+              connectionType: device.connectionType,
+              widgets: widgets,
+              ref: React.createRef(),
+            };
+            listRooms.push(room);
+            i++;
+          });
+          setRoom(listRooms);
+        })
+        .then(() => setLoading(false))
+        .catch((error) => console.error(error));
+
       API.get('project')
         .then((res) => {
           let _lables = res.data.widgets.filter(
@@ -342,9 +344,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   name: {
-    fontFamily: FONTS.regular,
+    fontFamily: FONTS.bold,
     fontSize: 28,
-    //fontWeight: '700',
     color: COLORS.primary,
   },
   header: {

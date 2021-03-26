@@ -46,6 +46,15 @@ class AssistantScreen extends Component {
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
+  componentDidMount() {
+    this.setState({
+      answer: '',
+      audioUrl: '',
+      audioKey: this.state.audioKey + 1,
+      paused: true,
+    });
+  }
+
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
   }
