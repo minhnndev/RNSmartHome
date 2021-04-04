@@ -14,7 +14,6 @@ export const COLORS = {
   gradientEnd: '#4507A0',
 
   background: '#212226', // gray
-
   // colors
   black: '#1E1F20',
   white: '#FFFFFF',

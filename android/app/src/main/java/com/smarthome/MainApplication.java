@@ -5,6 +5,7 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -14,6 +15,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+// import androidx.multidex.MultiDexApplication; // <-- ADD THIS IMPORT
 
 
 
@@ -84,3 +86,5 @@ public class MainApplication extends Application implements ReactApplication {
     }
   }
 }
+
+// public class MainApplication extends MultiDexApplication implements ReactApplication {

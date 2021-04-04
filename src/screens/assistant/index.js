@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, TouchableHighlight} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableHighlight,
+  PermissionsAndroid,
+  ToastAndroid,
+} from 'react-native';
 
 import Voice, {
   SpeechRecognizedEvent,
@@ -11,7 +19,7 @@ import Video from 'react-native-video';
 
 import axios from 'axios';
 
-class VoiceTest extends Component {
+class AssistantScreen extends Component {
   state = {
     recognized: '',
     pitch: '',
@@ -24,6 +32,7 @@ class VoiceTest extends Component {
     audioKey: 1,
     audioUrl: '',
     paused: false,
+    grantedPermission: false,
   };
 
   constructor(props: Props) {
@@ -37,8 +46,39 @@ class VoiceTest extends Component {
     Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
   }
 
+  componentDidMount() {
+    this.setState({
+      answer: '',
+      audioUrl: '',
+      audioKey: this.state.audioKey + 1,
+      paused: true,
+    });
+  }
+
   componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
+  }
+
+  async requestCameraPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Cấp quyền âm thanh trợ lý ảo',
+          message: 'Cho tao quyền ghi âm thanh đi :P',
+          buttonNeutral: 'Để tao suy nghĩ lại',
+          buttonNegative: 'Hong',
+          buttonPositive: 'Oke nha',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   onSpeechStart = (e: any) => {
@@ -64,6 +104,21 @@ class VoiceTest extends Component {
 
   onSpeechError = (e: SpeechErrorEvent) => {
     console.log('onSpeechError: ', e);
+    let message;
+    switch (e.error.code) {
+      case '9':
+        message = 'Chưa được cấp quyền ghi âm thanh!';
+        break;
+      default:
+        message = 'Có lỗi xảy ra!';
+    }
+    ToastAndroid.showWithGravityAndOffset(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+      25,
+      150,
+    );
     this.setState({
       error: JSON.stringify(e.error),
     });
@@ -76,7 +131,6 @@ class VoiceTest extends Component {
     });
 
     if (e.value.length > 0) {
-      console.log('Zoooooooooooooooo');
       axios
         .get('http://45.119.212.43:3001/api/nlp', {
           params: {
@@ -84,7 +138,7 @@ class VoiceTest extends Component {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
           this.setState({
             answer: response.data.answer,
             audioUrl: response.data.voice,
@@ -113,6 +167,11 @@ class VoiceTest extends Component {
   };
 
   _startRecognizing = async () => {
+    if (!this.state.grantedPermission) {
+      let granted = await this.requestCameraPermission();
+      this.setState({grantedPermission: granted});
+    }
+
     this.setState({
       recognized: '',
       pitch: '',
@@ -182,10 +241,17 @@ class VoiceTest extends Component {
     return (
       <View style={styles.container}>
         {audio}
+        <Text
+          style={{
+            ...styles.stat,
+            color: '#1765cf',
+          }}>{`${
+          this.state.results.length > 0 ? this.state.results[0] : ''
+        }`}</Text>
         <TouchableHighlight onPress={this._startRecognizing}>
           <Image
             style={styles.button}
-            source={require('../../assets/img/button.png')}
+            source={require('../../assets/img/record.png')}
           />
         </TouchableHighlight>
         <Text style={styles.stat}>{`${this.state.answer}`}</Text>
@@ -226,8 +292,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#B0171F',
     marginBottom: 1,
+    paddingLeft: 20,
+    paddingRight: 20,
     paddingTop: 50,
+    paddingBottom: 50,
   },
 });
 
-export default VoiceTest;
+export default AssistantScreen;

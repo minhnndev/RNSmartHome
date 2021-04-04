@@ -3,8 +3,8 @@ export const Users = [
     id: 1,
     email: 'admin@tmplatform.com',
     username: 'admin',
-    password: 'admin123',
-    tokenAccount: 'adminocchovl',
+    password: '123456',
+    tokenAccount: 'tokenadmin',
   },
   {
     id: 2,

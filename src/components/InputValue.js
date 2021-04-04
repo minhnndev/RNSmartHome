@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Icons from 'react-native-vector-icons/Feather';
 import {COLORS} from '../utils/theme';
+import {material} from 'react-native-typography';
 
 export default function InputValue({
   title,
@@ -16,6 +17,7 @@ export default function InputValue({
   onChangeText,
   keyboardType,
   value,
+  placeholder,
   onEndEditing,
 }) {
   const [show, setShow] = useState(false);
@@ -27,6 +29,7 @@ export default function InputValue({
       <View style={styles.inputContainer}>
         <Icons name={icon} size={22} color="#d3d4d5" />
         <TextInput
+          placeholder={placeholder}
           style={styles.input}
           keyboardType={keyboardType}
           onChangeText={onChangeText}
@@ -72,8 +75,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   title: {
+    ...material.caption,
     color: '#8a8b8c',
-    fontWeight: '400',
     marginVertical: 8,
     fontSize: 14,
   },

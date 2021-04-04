@@ -17,7 +17,7 @@ const Header = ({title, backBtn}) => {
   const navigation = useNavigation();
   return (
     <>
-      <StatusBar backgroundColor="transparent" translucent />
+      {/* <StatusBar backgroundColor="transparent" translucent /> */}
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}

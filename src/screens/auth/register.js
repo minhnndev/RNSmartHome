@@ -5,7 +5,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import {TextGradient, InputValue, Button} from '../../components';
 
-import {COLORS} from '../../utils/theme';
+import {COLORS, SIZES} from '../../utils/theme';
 
 const Register = ({navigation}) => {
   const [data, setData] = React.useState({
@@ -68,15 +68,18 @@ const Register = ({navigation}) => {
     <View style={styles.container}>
       <View>
         <TextGradient style={styles.txtLogo}>TM Platform</TextGradient>
+        <TextGradient style={styles.txtSlogan}>
+          Nền tảng nhà thông minh dành cho gia đình
+        </TextGradient>
         <Image
-          source={require('../../assets/img/logo.png')}
+          source={require('../../assets/img/logo-blue.png')}
           style={styles.tinyLogo}
         />
       </View>
       <View style={styles.formInput}>
         <View>
           <InputValue
-            title="MSSV"
+            title="Tài khoản"
             icon="user"
             onChangeText={(username) => textInputChange(username)}
           />
@@ -88,7 +91,7 @@ const Register = ({navigation}) => {
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Username must be 4 characters long.
+                Tài khoản phải có ít nhất 4 ký tự
               </Text>
             </Animatable.View>
           )}
@@ -113,13 +116,15 @@ const Register = ({navigation}) => {
         </View>
       </View>
       <View style={styles.button}>
-        <Button title="Đăng kí" style={styles.btn} />
+        <Button title="Đăng ký" style={styles.btn} />
       </View>
       <View style={styles.button}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Login')}
           style={styles.btnRegis}>
-          <Text style={styles.btnText}>Đăng Nhập</Text>
+          <Text style={styles.btnText}>
+            Bạn đã có tài khoản rồi ? Đăng nhập
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -138,10 +143,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 160,
   },
   txtLogo: {
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: '700',
     textAlign: 'center',
-    padding: 25,
+    paddingTop: 25,
+  },
+  txtSlogan: {
+    fontSize: 16,
+    textAlign: 'center',
+    paddingBottom: 25,
   },
   formInput: {
     marginHorizontal: 30,
@@ -154,6 +164,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   btnText: {
+    paddingTop: 20,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 30,
-    width: 200,
+    width: SIZES.width - 60,
     height: 50,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',

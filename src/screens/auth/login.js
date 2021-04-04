@@ -6,22 +6,25 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {material, robotoWeights} from 'react-native-typography';
 
 import {AuthContext} from '../../common/redux/context';
 import {Users} from '../../common/database/models/users';
 
 import {TextGradient, InputValue, Button} from '../../components';
 
-import {COLORS} from '../../utils/theme';
+import {COLORS, SIZES} from '../../utils/theme';
+import {notifyMessage} from '../../utils/helpers';
 
 const ButtonIcon = ({nameIcon, color}) => {
   return (
     <View style={[styles.bottomIcon, {borderColor: color}]}>
-      <AntDesign name={nameIcon} size={30} color={color} />
+      <AntDesign name={nameIcon} size={35} color={color} />
     </View>
   );
 };
@@ -56,7 +59,7 @@ const Login = ({navigation}) => {
   };
 
   const handlePasswordChange = (val) => {
-    if (val.trim().length >= 8) {
+    if (val.trim().length >= 6) {
       setData({
         ...data,
         password: val,
@@ -85,14 +88,17 @@ const Login = ({navigation}) => {
     }
   };
 
-  const loginHandle = (userName, passWord) => {
+  const loginHandle = (username, password) => {
     const foundUser = Users.filter((item) => {
-      return userName === item.username && passWord === item.password;
+      return (
+        username.toLowerCase() === item.username &&
+        password.toLowerCase() === item.password
+      );
     });
 
     if (data.username.length === 0 || data.password.length === 0) {
       Alert.alert(
-        'Nhập thông tin sai',
+        'Thông tin không chính xác',
         'Tài khoản hoặc mật khẩu không được để trống!',
         [{text: 'Ok'}],
       );
@@ -110,21 +116,29 @@ const Login = ({navigation}) => {
     signIn(foundUser);
   };
 
+  const onPressSocialButton = () => {
+    notifyMessage('Coming Soon');
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <TextGradient style={styles.txtLogo}>TM Platform</TextGradient>
-        <Image
-          source={require('../../assets/img/logo.png')}
-          style={styles.tinyLogo}
-        />
+        <TextGradient style={styles.txtSlogan}>
+          Nền tảng nhà thông minh dành cho gia đình
+        </TextGradient>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('../../assets/img/logo-blue.png')}
+            style={styles.tinyLogo}
+          />
+        </View>
       </View>
-      <View style={styles.formInput}>
+      <View style={{...styles.formInput, paddingTop: 50}}>
         <View>
           <InputValue
-            title="MSSV"
+            title="Tài khoản"
             icon="user"
-            keyboardType="numeric"
             onChangeText={(username) => textInputChange(username)}
             onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
           />
@@ -136,7 +150,7 @@ const Login = ({navigation}) => {
           {data.isValidUser ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
               <Text style={styles.errorMsg}>
-                Tên người dùng phải dài 4 ký tự.
+                Tên người dùng phải dài có ít nhất 4 ký tự.
               </Text>
             </Animatable.View>
           )}
@@ -150,7 +164,9 @@ const Login = ({navigation}) => {
           />
           {data.isValidPassword ? null : (
             <Animatable.View animation="fadeInLeft" duration={500}>
-              <Text style={styles.errorMsg}>Mật khẩu phải dài 8 ký tự.</Text>
+              <Text style={styles.errorMsg}>
+                Mật khẩu phải có ít nhất 6 ký tự.
+              </Text>
             </Animatable.View>
           )}
         </View>
@@ -168,18 +184,26 @@ const Login = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.navigate('Register')}
           style={styles.btnRegis}>
-          <Text style={styles.btnText}>Đăng kí</Text>
+          <Text style={styles.btnText}>
+            Bạn chưa có tài khoản? Đăng ký ngay
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
-        <Text style={styles.footerText}>OR LOGIN WITH</Text>
+        <Text style={styles.footerText}>Đăng nhập với</Text>
         <View style={styles.listButtonAccount}>
-          <ButtonIcon nameIcon="twitter" color="#1DA1F2" />
-          <ButtonIcon nameIcon="google" color="#DB4437" />
-          <ButtonIcon nameIcon="facebook-square" color="#4267B2" />
+          <TouchableOpacity onPress={onPressSocialButton}>
+            <ButtonIcon nameIcon="twitter" color="#1DA1F2" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onPressSocialButton}>
+            <ButtonIcon nameIcon="google" color="#DB4437" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onPressSocialButton}>
+            <ButtonIcon nameIcon="facebook-square" color="#4267B2" />
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -189,16 +213,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   tinyLogo: {
     width: 80,
     height: 70,
     marginHorizontal: 160,
   },
   txtLogo: {
-    fontSize: 32,
-    fontWeight: '700',
+    ...material.title,
+    fontSize: 40,
     textAlign: 'center',
-    padding: 25,
+    paddingTop: 40,
+    paddingBottom: 10,
+  },
+  txtSlogan: {
+    ...material.caption,
+    fontSize: 16,
+    textAlign: 'center',
+    paddingBottom: 25,
   },
   formInput: {
     marginHorizontal: 30,
@@ -211,12 +246,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   btnText: {
+    paddingTop: 20,
     fontSize: 16,
     fontWeight: '600',
   },
   bottomIcon: {
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
     borderWidth: 1,
     borderColor: '#fff',
     borderRadius: 50,
@@ -241,7 +277,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 30,
-    width: 200,
+    width: SIZES.width - 60,
     height: 50,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',

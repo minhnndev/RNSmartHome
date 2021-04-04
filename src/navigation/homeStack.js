@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AuthScreen from '../screens/auth';
 import ProjectScreen from '../screens/project';
 import DeviceScreen from '../screens/device/index';
 import DeviceDetailScreen from '../screens/device/detail';
@@ -11,6 +10,7 @@ import AccountScreen from '../screens/extend/account/accountScreen';
 import PasswordScreen from '../screens/extend/account/changePassword';
 import PrivacyScreen from '../screens/extend/privacyScreen';
 import SupportScreen from '../screens/extend/supportScreen';
+import AssistantScreen from '../screens/assistant';
 import HomeTabs from './tabsNavigator';
 
 const homeStack = createStackNavigator();
@@ -26,6 +26,11 @@ const HomeStackScreen = () => {
       <homeStack.Screen
         name="Project"
         component={ProjectScreen}
+        options={{headerShown: false}}
+      />
+      <homeStack.Screen
+        name="Assistant"
+        component={AssistantScreen}
         options={{headerShown: false}}
       />
       <homeStack.Screen

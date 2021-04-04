@@ -13,6 +13,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {AuthContext} from './common/redux/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {fcmService} from './services/notification/FCMservice';
+import {localNotificationService} from './services/notification/LocalNotificationService';
+
 import AuthStack from './navigation/authStack';
 import HomeStack from './navigation/homeStack';
 
@@ -96,6 +99,43 @@ const App = () => {
       // console.log('user token: ', tokenAccount);
       dispatch({type: 'RETRIEVE_TOKEN', token: tokenAccount});
     }, 1000);
+    //=========React-Native_Firebase_FCM==============/
+    fcmService.registerAppWithFCM();
+    fcmService.register(onRegister, onNotification, onOpenNotification);
+    localNotificationService.configure(onOpenNotification);
+
+    function onRegister(token) {
+      console.log('[App] onRegister: ', token);
+    }
+
+    function onNotification(notify) {
+      console.log('[App] onNotification: ', notify);
+      const options = {
+        soundName: 'default',
+        playSound: true, //,
+        // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+        // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+      };
+      localNotificationService.showNotification(
+        0,
+        notify.title,
+        notify.body,
+        notify,
+        options,
+      );
+    }
+
+    function onOpenNotification(notify) {
+      console.log('[App] onOpenNotification: ', notify);
+      // eslint-disable-next-line no-alert
+      alert(notify.body);
+    }
+
+    return () => {
+      console.log('[App] unRegister');
+      fcmService.unRegister();
+      localNotificationService.unregister();
+    };
   }, []);
 
   return (

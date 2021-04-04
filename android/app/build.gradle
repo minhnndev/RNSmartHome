@@ -1,6 +1,6 @@
 apply plugin: "com.android.application"
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -136,6 +136,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true // <-- ADD THIS in the defaultConfig section
+        
     }
     splits {
         abi {
@@ -189,13 +191,16 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':realm')
-    // Import the Firebase BoM
-    //implementation platform('com.google.firebase:firebase-bom:26.4.0')
+    //Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.4.0')
 
     // Add the dependency for the Firebase SDK for Google Analytics
      // When using the BoM, don't specify versions in Firebase dependencies
-    // implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
+    implementation project(':react-native-push-notification')
+
+    implementation 'androidx.multidex:multidex:2.0.1'  // <-- ADD THIS DEPENDENCY
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
