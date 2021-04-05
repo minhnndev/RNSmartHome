@@ -15,7 +15,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from 'react-native-slider';
-import _, {floor} from 'lodash';
+import _, {floor, map} from 'lodash';
 
 import {TextGradient} from '../../components/index';
 import {COLORS, SIZES, FONTS} from '../../utils/theme';
@@ -28,7 +28,7 @@ const Home = ({navigation, route}) => {
   const {room, labels} = route.params;
   // console.log(room.widgets);
   const [rooms, setRoom] = useState([]);
-  const [slider, setSlider] = useState(16);
+  const [slider, setSlider] = useState(180);
 
   const getPinShortCode = (widget) => {
     if (!widget.pin === -1) {
@@ -43,9 +43,18 @@ const Home = ({navigation, route}) => {
     return `${widget.pin}`;
   };
 
-  const setSwitchValue = (value, index) => {
+  const setSwitchValue = (type, value, index) => {
     let roomWidgets = room.widgets;
-    let newValue = value ? '1' : '0';
+    let newValue;
+    switch (type) {
+      case 'SLIDER':
+        newValue = value.toString();
+        break;
+      case 'BUTTON':
+      default:
+        newValue = value ? '1' : '0';
+        break;
+    }
     let widget = roomWidgets[index];
     let URI = 'update/' + getPinShortCode(widget) + '?value=' + newValue;
     API.get(URI).catch((error) => console.error(error));
@@ -53,28 +62,12 @@ const Home = ({navigation, route}) => {
     let roomWidgetsUpdated = _.clone(roomWidgets);
     roomWidgetsUpdated[index].value = newValue;
     setRoom(roomWidgetsUpdated);
+
+    console.log('Switch change ....');
   };
+
   const listItem = (item, index) => (
     <View style={styles.bottomDevice}>
-      {item.type === 'SLIDER' && (
-        <View style={styles.slideControl}>
-          <View style={styles.viewNameSlider}>
-            <Text style={styles.nameDevice}>{item.label}</Text>
-            <Ionicons name="ios-options" size={28} color={COLORS.lightGray} />
-          </View>
-          <Slider
-            minimumValue={item.min}
-            maximumValue={item.max}
-            trackStyle={styles.track}
-            thumbStyle={styles.thumb}
-            minimumTrackTintColor={COLORS.primary}
-            thumbTouchSize={{width: 50, height: 40}}
-            value={slider}
-            onValueChange={(value) => setSlider(value)}
-          />
-          <Text>Độ mở: {floor(slider)}°</Text>
-        </View>
-      )}
       {item.type === 'BUTTON' && (
         <View style={styles.switchControl}>
           <Text style={styles.nameDevice}>{item.label}</Text>
@@ -86,10 +79,34 @@ const Home = ({navigation, route}) => {
                 true: COLORS.primary,
               }}
               thumbColor={'#f4f3f4'}
-              onValueChange={(value) => setSwitchValue(value, index)}
+              onValueChange={(value) => setSwitchValue(item.type, value, index)}
               value={item.value === '1'}
             />
           </View>
+        </View>
+      )}
+    </View>
+  );
+
+  const listSlide = (item, index) => (
+    <View>
+      {item.type === 'SLIDER' && (
+        <View style={styles.slideControl}>
+          <View style={styles.viewNameSlider}>
+            <Text style={styles.nameDevice}>{item.label}</Text>
+            <Ionicons name="ios-options" size={28} color={COLORS.lightGray} />
+          </View>
+          <Slider
+            minimumValue={parseInt(item.min, 10)}
+            maximumValue={parseInt(item.max, 10)}
+            trackStyle={styles.track}
+            thumbStyle={styles.thumb}
+            minimumTrackTintColor={COLORS.primary}
+            thumbTouchSize={{width: 50, height: 40}}
+            value={parseInt(item.value, 10)}
+            onValueChange={(value) => setSwitchValue(item.type, value, index)}
+          />
+          <Text>Độ mở: {parseInt(item.value, 10)}°</Text>
         </View>
       )}
     </View>
@@ -128,6 +145,9 @@ const Home = ({navigation, route}) => {
       </View>
 
       <View style={{marginTop: 30, height: '100%'}}>
+        {room.widgets.map((widget, item) => {
+          return listSlide(widget, item);
+        })}
         <View style={styles.viewDevice}>
           <FlatList
             numColumns={2}
@@ -201,28 +221,28 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     backgroundColor: COLORS.white,
     width: 180,
-    height: 140,
+    height: 120,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 8,
     shadowColor: '#000',
     shadowOpacity: 0.3,
-    elevation: 4,
+    elevation: 3,
   },
   viewNameSlider: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   slideControl: {
-    paddingHorizontal: 20,
     marginTop: 10,
-    marginHorizontal: 10,
+    paddingHorizontal: 20,
     backgroundColor: COLORS.white,
-    width: 180,
+    width: width - 40,
     height: 140,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
+    marginHorizontal: 20,
     // alignItems: 'center',
     borderRadius: 8,
     shadowColor: '#000',
