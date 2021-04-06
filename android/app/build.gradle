@@ -201,6 +201,8 @@ dependencies {
     implementation project(':react-native-push-notification')
 
     implementation 'androidx.multidex:multidex:2.0.1'  // <-- ADD THIS DEPENDENCY
+    
+    implementation project(':react-native-charts-wrapper')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

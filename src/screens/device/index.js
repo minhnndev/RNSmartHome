@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
-  SafeAreaView,
   StyleSheet,
   Dimensions,
   Animated,
@@ -10,25 +8,29 @@ import {
   Switch,
   TouchableOpacity,
   FlatList,
-  TouchableWithoutFeedback,
+  processColor,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Slider from 'react-native-slider';
+import {LineChart} from 'react-native-charts-wrapper';
 import _, {floor, map} from 'lodash';
 
-import {TextGradient} from '../../components/index';
+import {TextGradient, Background} from '../../components/index';
 import {COLORS, SIZES, FONTS} from '../../utils/theme';
 
 import API from '../../services/api';
-
+const greenBlue = 'rgba(146, 141, 171, 0.8)';
+const petrel = 'rgba(0, 210, 255, 0.8)';
+const thermFillA = 'rgba(255, 0, 0, 0.8)';
+const thermFillB = 'rgba(255, 255, 0, 0.8)';
 const {width, height} = Dimensions.get('screen');
 
 const Home = ({navigation, route}) => {
   const {room, labels} = route.params;
   // console.log(room.widgets);
   const [rooms, setRoom] = useState([]);
-  const [slider, setSlider] = useState(180);
 
   const getPinShortCode = (widget) => {
     if (!widget.pin === -1) {
@@ -70,6 +72,11 @@ const Home = ({navigation, route}) => {
     <View style={styles.bottomDevice}>
       {item.type === 'BUTTON' && (
         <View style={styles.switchControl}>
+          <Entypo
+            name={item.value === 1 ? 'light-down' : 'light-up'}
+            size={25}
+            color={COLORS.secondary}
+          />
           <Text style={styles.nameDevice}>{item.label}</Text>
           <View style={styles.alignCenter}>
             <Switch
@@ -114,6 +121,11 @@ const Home = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
+      <Background
+        height={(height / 100) * 16}
+        width={width}
+        style={styles.bgHead}
+      />
       <View style={styles.header}>
         <View>
           <TextGradient style={styles.name}>{room.name}</TextGradient>
@@ -143,7 +155,177 @@ const Home = ({navigation, route}) => {
           />
         </TouchableOpacity>
       </View>
+      <View style={styles.chart}>
+        <LineChart
+          style={styles.chartAnalytics}
+          data={{
+            dataSets: [
+              {
+                values: [
+                  {
+                    y: 68.2,
+                    x: 0,
+                    marker: '68.2%',
+                  },
+                  {
+                    y: 77.3,
+                    x: 1,
+                    marker: '77.3%',
+                  },
+                  {
+                    y: 71.9,
+                    x: 2,
+                    marker: '71.9%',
+                  },
+                  {
+                    y: 78.7,
+                    x: 3,
+                    marker: '78.7%',
+                  },
+                  {
+                    y: 69.5,
+                    x: 4,
+                    marker: '69.5%',
+                  },
+                  {
+                    y: 73.3,
+                    x: 5,
+                    marker: '73.3%',
+                  },
+                ],
+                label: 'Độ ẩm',
+                config: {
+                  mode: 'CUBIC_BEZIER',
+                  drawValues: false,
+                  lineWidth: 2,
+                  drawCircles: true,
+                  circleColor: processColor(COLORS.primary),
+                  drawCircleHole: false,
+                  circleRadius: 5,
+                  highlightColor: processColor('transparent'),
+                  color: processColor(petrel),
+                  drawFilled: true,
+                  fillGradient: {
+                    colors: [processColor(petrel), processColor(greenBlue)],
+                    positions: [0, 0.5],
+                    angle: 90,
+                    orientation: 'TOP_BOTTOM',
+                  },
+                  fillAlpha: 1000,
+                  valueTextSize: 15,
+                },
+              },
 
+              {
+                values: [
+                  {
+                    y: 30.3,
+                    x: 0,
+                    marker: '30.3°C',
+                  },
+                  {
+                    y: 34.6,
+                    x: 1,
+                    marker: '29.6°C',
+                  },
+                  {
+                    y: 33.2,
+                    x: 2,
+                    marker: '33.2°C',
+                  },
+                  {
+                    y: 32.4,
+                    x: 3,
+                    marker: '32.4°C',
+                  },
+                  {
+                    y: 33.5,
+                    x: 4,
+                    marker: '33.5°C',
+                  },
+                  {
+                    y: 31.1,
+                    x: 5,
+                    marker: '31.1°C',
+                  },
+                ],
+                label: 'Nhiệt độ',
+                config: {
+                  mode: 'CUBIC_BEZIER',
+                  drawValues: false,
+                  lineWidth: 2,
+                  drawCircles: true,
+                  circleColor: processColor('#ff7e5f'),
+                  drawCircleHole: false,
+                  circleRadius: 5,
+                  highlightColor: processColor('transparent'),
+                  color: processColor('#feb47b'),
+                  drawFilled: true,
+                  fillGradient: {
+                    colors: [
+                      processColor(thermFillA),
+                      processColor(thermFillB),
+                    ],
+                    positions: [0, 0.5],
+                    angle: 90,
+                    orientation: 'TOP_BOTTOM',
+                  },
+                  fillAlpha: 1000,
+                  valueTextSize: 15,
+                },
+              },
+            ],
+          }}
+          chartDescription={{text: ''}}
+          legend={{
+            enabled: true,
+          }}
+          marker={{
+            enabled: true,
+            markerColor: processColor('white'),
+            textColor: processColor('black'),
+          }}
+          xAxis={{
+            enabled: true,
+            granularity: 1,
+            drawLabels: true,
+            position: 'BOTTOM',
+            drawAxisLine: true,
+            drawGridLines: false,
+            fontFamily: 'HelveticaNeue-Medium',
+            fontWeight: 'bold',
+            textSize: 12,
+            textColor: processColor('gray'),
+            valueFormatter: ['0h', '4h', '8h', '12h', '16h', '20h'],
+          }}
+          yAxis={{
+            left: {
+              enabled: false,
+            },
+            right: {
+              enabled: false,
+            },
+          }}
+          autoScaleMinMaxEnabled={true}
+          animation={{
+            durationX: 0,
+            durationY: 1500,
+            easingY: 'EaseInOutQuart',
+          }}
+          drawGridBackground={false}
+          drawBorders={false}
+          touchEnabled={true}
+          dragEnabled={false}
+          scaleEnabled={false}
+          scaleXEnabled={false}
+          scaleYEnabled={false}
+          pinchZoom={false}
+          doubleTapToZoomEnabled={false}
+          dragDecelerationEnabled={true}
+          dragDecelerationFrictionCoef={0.99}
+          keepPositionOnRotation={false}
+        />
+      </View>
       <View style={{marginTop: 30, height: '100%'}}>
         {room.widgets.map((widget, item) => {
           return listSlide(widget, item);
@@ -171,10 +353,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
+  bgHead: {
+    position: 'absolute',
+    zIndex: -99,
+  },
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  chart: {
+    marginTop: 5,
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255,255,255,1)',
+    shadowColor: COLORS.black,
+    shadowOpacity: 0.5,
+    elevation: 5,
+  },
+  chartAnalytics: {
+    width: width - 20,
+    height: 120,
   },
   name: {
     fontFamily: FONTS.bold,
@@ -199,7 +399,7 @@ const styles = StyleSheet.create({
   },
   txtPara: {
     fontSize: 18,
-    color: COLORS.lightGray,
+    color: COLORS.darkgray,
   },
   alignCenter: {
     alignItems: 'center',
